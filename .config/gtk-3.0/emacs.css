@@ -1,0 +1,37 @@
+/* https://superuser.com/questions/597076/gtk-3-menu-configuration-for-emacs/693494#693494 */
+/* This is really a mess I think I can find something for finding what name
+   Emacs is using using something called GtkInspector. */
+
+/* Overall colour of the menubar */
+window#Emacs > #pane #menubar
+{
+    background-color: #8c8c8c
+}
+
+/* This will do everything under menuitem except what I explicitly state. */
+/* It looks like anything that also has a keybind does this weird thing where
+   only some of it has this formatting on it. I think some part of it must be
+   under something else. */
+#emacs-menuitem
+{
+    background-color: #8c8c8c
+}
+
+#emacs-menuitem *:active,
+#emacs-menuitem *:hover
+{
+    background-color: #1c1b19;
+    color: #fbb829
+}
+
+#emacs-menuitem *:disabled
+{
+    background-color: #1c1b19
+}
+
+/* Popup dialog ie. the popup when you edit a file and then try and close it. */
+#emacs-dialog
+{
+    background-color: #8c8c8c;
+    color: #382d2b
+}

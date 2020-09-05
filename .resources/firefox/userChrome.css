@@ -1,0 +1,182 @@
+/* https://old.reddit.com/r/FirefoxCSS/ */
+
+/* Get rid of the annoying white flash when your waiting on a page to load.
+   This makes it the same color as the dark theme. */
+.browserContainer {
+    background-color: #2A2A2E !important;
+}
+
+/* Hide (seemingly?) useless thumbnail that shows when you bookmark a page. */
+#editBookmarkPanelImage {
+    display: none !important;
+}
+
+/* https://old.reddit.com/r/firefox/comments/fwhlva/address_barawesomebar_design_update_in_firefox_75/fmolndz/ */
+/* Disable expanding & animations for the urlbar */
+#urlbar[breakout][breakout-extend] {
+    top: calc((var(--urlbar-toolbar-height) - var(--urlbar-height)) / 2) !important;
+    left: 0 !important;
+    width: 100% !important;
+}
+
+#urlbar[breakout][breakout-extend] > #urlbar-input-container {
+    height: var(--urlbar-height) !important;
+    padding-block: 0px !important;
+    padding-inline: 0px !important;
+}
+
+#urlbar[breakout][breakout-extend][breakout-extend-animate] > #urlbar-background {
+    animation-name: none !important;
+}
+
+/* Get rid of blue border around the urlbar */
+#urlbar-background, #urlbar-container, .urlbar-input-box {
+    border: none !important;
+}
+
+/* Hide the Email image popup in the context menu */
+#context-sendimage, #context-setDesktopBackground {
+    display: none !important;
+}
+
+/* Hide the Search option in the context menu */
+#context-searchselect {
+    display: none !important;
+}
+
+/* Make the context Menu dark */
+/* https://gist.github.com/Guerra24/6d7bc4be8849bb8d6eef3a2a74d68e1f */
+/* If something has a little box for a check mark (for example The Menu Bar and
+   Bookmark Toolbar) I can't see the box. */
+menupopup {
+    -moz-appearance: none !important;
+    background-color: #2B2B2B !important;
+    border: 1px solid #333 !important;
+}
+
+menuseparator {
+    -moz-appearance: none !important;
+    border: none !important;
+    padding: 0.5px 0px .5px 0px !important;
+    background-color: #808080 !important;
+}
+
+menuitem, menu {
+    -moz-appearance: none !important;
+    color: white !important;
+    background-color: transparent !important;
+    padding: 7.5px 0px 7.5px 0px !important;
+}
+
+#organizeButton > label:nth-child(2), #viewMenu > label:nth-child(2), #maintenanceButton > label:nth-child(2) {
+    color: black !important;
+}
+
+menuitem[disabled="true"], menuitem[disabled="true"] > .menu-text {
+    color: gray !important;
+}
+
+menuitem:hover, menu:hover, menu[open="true"], menuitem[_moz-menuactive="true"]	 {
+    -moz-appearance: none !important;
+    padding: 7.5px 0px 7.5px 0px !important;
+    background-color: #414141 !important;
+}
+
+menugroup {
+    padding: 0 !important;
+    background-color: transparent !important;
+}
+
+menuitem > .menu-text, menuitem > .menu-iconic-text {
+    color: white !important;
+}
+
+menuitem[type="checkbox"] {
+    padding-left: 8px !important;
+    padding-top: 6.5px !important;
+    padding-bottom: 6.5px !important;
+}
+
+menuitem[type="radio"] {
+    padding-left: 8px !important;
+    padding-top: 6.5px !important;
+    padding-bottom: 6.5px !important;
+}
+
+menuitem[type="checkbox"] > .menu-iconic-text, menuitem[type="radio"] > .menu-iconic-text {
+    padding-left: 5px !important;
+}
+
+menuitem[checked="true"][type="checkbox"] > .menu-iconic-left {
+    border: solid white;
+    border-width: 0 0 2px 2px;
+    transform: rotate(-45deg) scale(.60);
+    margin-bottom: 4px !important;
+}
+
+menuitem[checked="true"][type="radio"] > .menu-iconic-left {
+    padding: 1px !important;
+    border: solid white;
+    height: 17px !important;
+    border-radius: 100%;
+    background: white;
+    transform: scale(.5);
+}
+
+menucaption {
+    background-color: transparent !important;
+    color: white !important;
+}
+
+#ContentSelectDropdown > menupopup {
+    background-image: none !important;
+}
+
+#ContentSelectDropdown {
+    padding: 0px !important;
+}
+
+menulist {
+    -moz-appearance: none !important;
+    padding: 4px 4px 4px 4px !important;
+    border: 2px solid #666666 !important;
+    background-color: #cbcbcb !important;
+}
+
+menulist:hover {
+    padding: 4px 4px 4px 4px !important;
+    border: 2px solid #999999 !important;
+    background-color: #999999 !important;
+}
+
+menulist[open="true"]  {
+    border: 2px solid #999999 !important;
+    background-color: #999999 !important;
+}
+
+#context-back > .menu-iconic-left, #context-forward > .menu-iconic-left, #context-reload > .menu-iconic-left, #context-stop > .menu-iconic-left, #context-bookmarkpage > .menu-iconic-left {
+    padding: 0px !important;
+}
+
+.menu-iconic-left {
+    -moz-appearance: none !important;
+    padding: 0px 5px 0px 9px !important;
+}
+
+.menu-right {
+    -moz-appearance: none !important;
+    padding: 7.5px !important;
+    margin-right: 6px !important;
+    color: white !important;
+    border: solid white;
+    border-width: 0px 2px 2px 0px;
+    transform: rotate(-45deg) scale(.55);
+}
+
+tooltip {
+    -moz-appearance: none !important;
+    color: white !important;
+    background-color: #2B2B2B !important;
+    border: 1px solid #767676 !important;
+    padding: 6.5px !important;
+}
