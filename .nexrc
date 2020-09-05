@@ -1,0 +1,20 @@
+" Case-insensitive search, unless an uppercase letter is used
+set iclower
+" Allow left-right scrolling
+set leftright
+" Show current line number
+set number
+" Print helpful messages (eg, 4 lines yanked)
+set report=1
+" Display row/column info
+set ruler
+" incremental search
+set searchincr
+" Show matching parens, braces, etc
+set showmatch
+" Display current mode (insert/normal)
+set showmode
+" Display all error messages
+set verbose
+" Break lines automatically at 80 columns
+set wraplen=80

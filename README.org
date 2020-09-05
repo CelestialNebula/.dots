@@ -1,0 +1,78 @@
+#+STARTUP: inlineimages
+/This technique consists of storing a Git bare repository in a side folder/
+/using a specially crafted alias so that commands are run against that/
+/repository and not the usual .git local folder./
+
+* The Setup
+This will create a folder =~/.dots= which is a Git bare repository.  Then
+create an alias ~dots~ which will be used instead of the regular ~git~ when I
+want to interact with my configuration repository.  Hiding files you don't
+explicitly track, so ~$ dots status~ and other commands later don't show files
+you aren't interested in tracking and won't show up as untracked.
+
+Alias for set up (as long as this shell is open & only in this shell):
+#+begin_example
+$ alias dots="/usr/local/bin/git --git-dir=$HOME/.dots/ --work-tree=$HOME"
+$ git init --bare $HOME/.dots
+$ dots config status.showUntrackedFiles no
+#+end_example
+When you are done any file within the ~$HOME~ folder can be versioned with
+normal commands, replacing ~git~ with your newly created ~dots~ alias:
+#+begin_example
+  $ dots status
+  $ dots add .tmux.conf
+  $ dots commit -m "Added .tmux.conf"
+  $ dots add .Xresources
+  $ dots commit -m "Added .Xresources"
+  $ dots push
+#+end_example
+* Installing your dotfiles onto a new system
+Alias for it while I set it up (as long as this shell is open & only in this
+shell):
+#+begin_example
+$ alias dots="/usr/local/bin/git --git-dir=$HOME/.dots/ --work-tree=$HOME"
+#+end_example
+
+Clone your dotfiles into a bare repository:
+#+begin_example
+$ git clone --bare https://github.com/CelestialNebula/.dots.git $HOME/.dots
+#+end_example
+Check the content of the ~OpenBSD~ branch from the bare repository to your
+~$HOME~:
+#+begin_example
+$ dots checkout OpenBSD
+#+end_example
+
+*Note*: The above might fail with something like this message: "The following
+untracked working tree files would be overwritten by checkout", etc.  This is
+because your ~$HOME~ folder might already have some stock configuration files
+which would be overwritten by Git.  Back up the files if you need them if not
+delete them.
+
+Re-run the checkout if you had problems:
+#+begin_example
+$ dots checkout OpenBSD
+#+end_example
+Set the flag ~showUntrackedFiles~ to ~no~ on this specific (local) repository:
+#+begin_example
+$ dots config status.showUntrackedFiles no
+#+end_example
+Then you can add and update as described above.
+* Screenshots
+*ToDo*
+
+Taskbar
+
+Xterm
+
+Tmux
+
+Tmux + prefix
+
+GNU/Emacs startup screen
+
+GNU/Emacs display header for prog-modes
+* Based off:
+[[https://news.ycombinator.com/item?id=11070797][Ask HN: What do you use to manage dotfiles?]]
+
+[[https://www.atlassian.com/git/tutorials/dotfiles][The best way to store your dotfiles: A bare Git repository]]

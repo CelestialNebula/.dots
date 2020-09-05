@@ -1,0 +1,62 @@
+borderwidth 1
+color activeborder green
+color font black
+color selfont green
+color menubg gray
+color urgencyborder red
+fontname "DejaVu Serif"
+gap 1 1 0 0
+snapdist 2
+
+command xterm   /usr/X11R6/xterm
+command emacs   /usr/local/emacs
+
+autogroup 1 "xterm,XTerm"
+autogroup 2 "emacs,Emacs"
+
+# Recongnised keys:
+# Buttons:
+# 1 = Left mouse button
+# 2 = Middle mouse button
+# 3 = Right mouse button
+# 4 = Scroll up mouse button
+# 5 = Scroll down mouse button
+# Modifiers:
+# C = Ctrl
+# M = Meta key (Alt)
+# S = Shift key
+# 4 = Mod4 (Super, Windows key)
+
+unbind-mouse M-1   # Move window
+unbind-mouse CM-1  # Toggle group membership of current window
+unbind-mouse M-2   # Resize window
+unbind-mouse M-3   # Lower window
+unbind-mouse CMS-3 # Hide window
+
+bind-mouse 4-1 window-move
+bind-mouse 4-3 window-resize
+bind-mouse 4C-1 window-lower
+bind-mouse 4C-3 window-hide
+
+unbind-key all
+bind-key 4C-r  restart # Restart cwm
+bind-key 4C-c  quit    # Quit cwm
+bind-key 4-1   menu-exec
+bind-key 4-2   window-close
+bind-key 4-3   window-cycle
+bind-key 4-4   group-toggle-2
+bind-key 4-5   window-cycle-ingroup
+bind-key 4-a   window-snap-up
+bind-key 4-u   window-snap-down
+bind-key 4-o   window-snap-left
+bind-key 4-e   window-snap-right
+bind-key 4-k   window-maximize
+bind-key 4-q   window-vmaximize
+bind-key 4-j   window-hmaximize
+bind-key 4S-q  window-vtile
+bind-key 4S-j  window-htile
+bind-key 4C-1  "/usr/X11R6/xterm"
+bind-key 4C-2  "/usr/local/emacs"
+bind-key 4C-3  "/home/USER/.scripts/taskbar.sh"
+bind-key 4C-k  "/usr/X11R6/xkill"
+bind-key 4C-l  "/usr/X11R6/xlock"
