@@ -53,7 +53,7 @@ alias rmc='/usr/bin/rm -i --verbose'
 # Custom
 alias grep='/usr/bin/grep --color=auto'
 alias topc='/usr/bin/top -d 1.5 -1'
-alias lsc='/usr/bin/ls --all --classify --group-directories-first --human-readable -l -v'
+alias lsc='/usr/bin/ls --all --color=always --classify --group-directories-first --human-readable -l -v'
 alias findd='/usr/bin/find ./ -type d -iname'
 alias findf='/usr/bin/find ./ -type f -iname'
 alias ec='/usr/bin/emacsclient --alternate-editor="" --create-frame'
