@@ -5,10 +5,9 @@ set -o emacs
 
 # Custom prompt
 # https://misc.flogisoft.com/bash/tip_colors_and_formatting
-_PS1_BROWN="\[\033[38;5;166m\]"
-_PS1_CLEAR="\[\033[0m\]"
 _PS1_GREEN="\[\033[32m\]"
-PS1="$_PS1_BROWN\u@\h$_PS1_CLEAR:$_PS1_GREEN\w$_PS1_CLEAR\n\$ "
+_PS1_CLEAR="\[\033[0m\]"
+PS1="$_PS1_GREEN\w$_PS1_CLEAR\n\$ "
 
 # Alias
 # In general, it is a bad practice to rename a command which already exists.
