@@ -9,7 +9,7 @@ gap 1 1 0 0
 snapdist 2
 
 command xterm   /usr/X11R6/bin/xterm
-command emacs   /usr/local/binemacs
+command emacs   /usr/local/bin/emacs
 
 autogroup 1 "xterm,XTerm"
 autogroup 2 "emacs,Emacs"
