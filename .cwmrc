@@ -8,8 +8,8 @@ fontname "DejaVu Serif"
 gap 1 1 0 0
 snapdist 2
 
-command xterm   /usr/X11R6/xterm
-command emacs   /usr/local/emacs
+command xterm   /usr/X11R6/bin/xterm
+command emacs   /usr/local/binemacs
 
 autogroup 1 "xterm,XTerm"
 autogroup 2 "emacs,Emacs"
@@ -55,8 +55,8 @@ bind-key 4-q   window-vmaximize
 bind-key 4-j   window-hmaximize
 bind-key 4S-q  window-vtile
 bind-key 4S-j  window-htile
-bind-key 4C-1  "/usr/X11R6/xterm"
-bind-key 4C-2  "/usr/local/emacs"
+bind-key 4C-1  "/usr/X11R6/bin/xterm"
+bind-key 4C-2  "/usr/local/bin/emacs"
 bind-key 4C-3  "/home/USER/.scripts/taskbar.sh"
-bind-key 4C-k  "/usr/X11R6/xkill"
-bind-key 4C-l  "/usr/X11R6/xlock"
+bind-key 4C-k  "/usr/X11R6/bin/xkill"
+bind-key 4C-l  "/usr/X11R6/bin/xlock"
