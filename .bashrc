@@ -13,12 +13,15 @@ export LESSHISTFILE=/dev/null
 
 # Custom prompt
 # https://misc.flogisoft.com/bash/tip_colors_and_formatting
-_PS1_GREEN="\[\033[32m\]"
-_PS1_CLEAR="\[\033[0m\]"
-PS1="$_PS1_GREEN\w$_PS1_CLEAR\n\$ "
+_PS1_GREEN='\[\e[32m\]'
+_PS1_CLEAR='\[\e[0m\]'
+# https://github.com/qbit/ohmyksh
+# I'm not sure what the 'Arithmetic Expansion' is doing here?
+_COLOR_ON_ERROR='\[\e[$(($??31:39))m\]'
+PS1="$_PS1_GREEN\w$_PS1_CLEAR\n[$_COLOR_ON_ERROR\$?$_PS1_CLEAR]\$ "
 
 # Custom title
-# If this is an xterm set the title to user@host:dir
+# If this is an xterm set the title to: user@host:dir
 # This needs to be after you set your current PS1 prompt.
 case "$TERM" in
     xterm*|rxvt*)
@@ -69,7 +72,8 @@ alias wgetr='/usr/bin/wget --report-speed=bits --show-progress --wait=3 --random
 alias rsyncc='/usr/bin/rsync -vv --info=progress2,stats2 --archive --update --hard-links --itemize-changes -hhh'
 alias mpvyt='/usr/bin/mpv --ytdl-format=22'
 
-# If not running interactively, don't do anything?
+# If running interactively, exit
+# https://stackoverflow.com/questions/40747576/need-help-understanding-a-strange-bashrc-expression/40750440#40750440
 case $- in
     *i*)
     ;;
