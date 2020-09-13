@@ -208,6 +208,7 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
   (org-startup-truncated nil)
   (org-startup-folded t)
   (org-log-done t)
+  (org-adapt-indentation nil)
   (org-src-fontify-natively t)
   (org-src-tab-acts-natively t)
   (org-edit-src-content-indentation 0)
