@@ -47,6 +47,8 @@ fi
 # the next command word following the alias is also checked for alias
 # expansion."
 
+alias vi='/usr/bin/nvi'
+
 # Confirm before overwriting something
 alias mvc='/usr/bin/mv --interactive --verbose'
 alias cpc='/usr/bin/cp --interactive --preserve=all --verbose'

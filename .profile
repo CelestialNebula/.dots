@@ -1,7 +1,7 @@
 # /usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:
 PATH=$PATH:$HOME/.scripts:$HOME/.local/bin
 
-export VISUAL="vi"
+export VISUAL="nvi"
 
 # The environment global umask is set in /etc/profile
 # This doesn't seem to take effect?
