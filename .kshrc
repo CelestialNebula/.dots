@@ -5,9 +5,11 @@ set -o emacs
 
 # Custom prompt
 # https://misc.flogisoft.com/bash/tip_colors_and_formatting
-_PS1_GREEN="\[\033[32m\]"
-_PS1_CLEAR="\[\033[0m\]"
-PS1="$_PS1_GREEN\w$_PS1_CLEAR\n\$ "
+_PS1_GREEN="\[\e[32m\]"
+_PS1_CLEAR="\[\e[0m\]"
+# https://github.com/qbit/ohmyksh
+_COLOR_ON_ERROR='\[\e[$(($??31:39))m\]'
+PS1="$_PS1_GREEN\w$_PS1_CLEAR\n[$_COLOR_ON_ERROR\$?$_PS1_CLEAR]\$ "
 
 # Alias
 # In general, it is a bad practice to rename a command which already exists.
