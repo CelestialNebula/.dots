@@ -63,7 +63,7 @@ bind-key 4S-q  window-vtile
 bind-key 4S-j  window-htile
 bind-key 4C-1  "/usr/bin/xterm"
 bind-key 4C-2  "/usr/bin/emacs"
-bind-key 4C-3  "/home/USER/.scripts/taskbar.sh"
+bind-key 4C-3  "/home/alto/.scripts/taskbar.sh"
 bind-key 4C-4  "/usr/bin/firefox -P work --no-remote"
 bind-key 4C-5  "/usr/bin/firefox -P play --no-remote"
 bind-key 4C-k  "/usr/bin/xkill"
