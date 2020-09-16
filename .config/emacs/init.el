@@ -80,6 +80,7 @@
   (word-wrap t)
   (custom-file null-device "Don't store customization's.")
   (isearch-lazy-count t)
+  (require-final-newline t)
   ;; Keep all backup and auto-save files in one directory.
   (backup-directory-alist
    '(("." . "~/.config/emacs/backups/")))
