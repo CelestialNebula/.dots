@@ -1,7 +1,9 @@
 HISTCONTROL=ignoredups:ignorespace
-HISTFILE=$HOME/.ksh_history
+HISTFILE=$HOME/.config/ksh/.ksh_history
 
 set -o emacs
+
+export PYTHONSTARTUP=$HOME/.config/python/.pythonstartup
 
 # Custom prompt
 # https://misc.flogisoft.com/bash/tip_colors_and_formatting
@@ -10,6 +12,13 @@ _PS1_CLEAR="\[\e[0m\]"
 # https://github.com/qbit/ohmyksh
 _COLOR_ON_ERROR='\[\e[$(($??31:39))m\]'
 PS1="$_PS1_GREEN\w$_PS1_CLEAR\n[$_COLOR_ON_ERROR\$?$_PS1_CLEAR]\$ "
+
+OHMYKSH_DIR=$HOME/.config/ksh
+. ${OHMYKSH_DIR}/ohmy.ksh
+
+load_completion man
+load_completion git
+load_completion dots
 
 # Alias
 # In general, it is a bad practice to rename a command which already exists.
@@ -27,7 +36,6 @@ alias rmc='/bin/rm -iv'
 # Custom
 alias topc='/usr/bin/top -C -o cpu -S -s 1.5'
 alias lsc='/bin/ls -aFhl'
-alias catc='/bin/cat -nv'
 # https://github.com/tmux/tmux/issues/142#issuecomment-586116296
 # "FYI, looks like Tmux 3.1 (currently pre-release) is adding this feature:
 # 15d7e56."
