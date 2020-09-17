@@ -29,6 +29,8 @@
 ;; *server* and it "prepends" the start message in the *scratch* buffer.  The
 ;; modeline also seems to blend in to the background.  (But not on the
 ;; non-active ones.)  I think this also starts in insert mode but shows the C?
+;; This is the issue about it starting in insert mode.
+;; https://github.com/xahlee/xah-fly-keys/issues/103
 ;; 4. Anyway to move image-dired to /tmp/ so it's not persistent?  I don't
 ;; need/want to keep the thumbnails.  (Can I point it to the null-device just
 ;; like custom-file?)
