@@ -313,6 +313,10 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
   :hook ((prog-mode elpy-mode-hook) . flycheck-mode))
 
 ;; Python
+(use-package python-mode
+  :custom
+  (python-shell-interpreter "python3"))
+
 (use-package elpy
   :straight t
   :hook (python-mode . elpy-enable)
