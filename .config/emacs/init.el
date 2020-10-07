@@ -54,6 +54,9 @@
 ;; https://github.com/raxod502/straight.el/issues/262#issuecomment-376928443
 ;; https://github.com/hlissner/doom-emacs/blob/8b52e8ca0f0873ba8b4e569d7fd7d2e80a4a45ab/core/core.el#L430
 ;; If I can decipher the code from doom I can get an idea of how to do it.
+;; 8. I only want the commands I remapped in elpy to be active in
+;; 'xah-fly-command-map' if I leave it at 'elpy-mode-hook' it's active in
+;; command & insert mode and takes my space.
 
 ;; Package Setup with straight.el
 (defvar bootstrap-version)
@@ -329,7 +332,9 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
 		  elpy-module-yasnippet
 		  elpy-module-django))
   (elpy-get-info-from-shell t)
-  :bind (:map elpy-mode-map
+  (elpy-rpc-python-command "/usr/local/bin/python3")
+  ;; :bind (:map elpy-mode-map
+  :bind (:map xah-fly-command-map
 	      ;; Interactive Python
 	      ("SPC . w" . elpy-shell-switch-to-shell)
 	      ("SPC . u" . elpy-shell-send-region-or-buffer)
