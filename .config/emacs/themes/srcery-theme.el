@@ -229,7 +229,8 @@
   :group 'srcery)
 
 (make-face 'mode-line-80col-face)
-(make-face 'mode-line-vc-face)
+(make-face 'mode-line-buffer-face)
+(make-face 'mode-line-misc-face)
 
 (let* ((srcery-class '((class color) (min-colors 257)))
 
@@ -2478,9 +2479,13 @@
 
    `(mode-line-80col-face
      ((,srcery-class (:foreground "#ff7f50" :background "#0f0e0d"))
-      (,srcery-class (:foreground "#ff7f50" :background "#0f0e0d"))))
+      (,srcery-256-class (:foreground "#ff7f50" :background "#0f0e0d"))))
 
-   `(mode-line-vc-face
+   `(mode-line-buffer-face
+     ((,srcery-class (:weight bold))
+      (,srcery-256-class (:weight bold))))
+
+   `(mode-line-misc-face
      ((,srcery-class (:foreground "#ff7f50"))
       (,srcery-256-class (:foreground "#ff7f50"))))
 
