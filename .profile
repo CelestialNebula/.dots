@@ -6,4 +6,6 @@
 PATH=$PATH:$HOME/.scripts:$HOME/.local/bin
 export PATH HOME TERM
 
-export VISUAL="vi"
+export VISUAL='vi'
+export MANPAGER='less -i'
+export PYTHONSTARTUP=$HOME/.config/python/.pythonstartup

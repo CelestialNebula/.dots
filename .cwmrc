@@ -1,12 +1,11 @@
 borderwidth 1
 color activeborder green
 color font black
-color selfont green
+color selfont gold
 color menubg gray
 color urgencyborder red
 fontname "DejaVu Serif"
 gap 1 1 0 0
-snapdist 2
 
 command xterm   /usr/X11R6/bin/xterm
 command emacs   /usr/local/bin/emacs
@@ -26,12 +25,6 @@ autogroup 2 "emacs,Emacs"
 # M = Meta key (Alt)
 # S = Shift key
 # 4 = Mod4 (Super, Windows key)
-
-unbind-mouse M-1   # Move window
-unbind-mouse CM-1  # Toggle group membership of current window
-unbind-mouse M-2   # Resize window
-unbind-mouse M-3   # Lower window
-unbind-mouse CMS-3 # Hide window
 
 bind-mouse 4-1 window-move
 bind-mouse 4-3 window-resize

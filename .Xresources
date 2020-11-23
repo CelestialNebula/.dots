@@ -5,8 +5,6 @@
 XTerm*vt100.geometry        : 90x23
 ! Set TERM env variable to use 256 colors
 XTerm*termName              : xterm-256color
-! Dont include a trailing newline in the selection
-XTerm*cutNewline            : false
 ! Clicking a line selects only from the current word forward
 XTerm*cutToBeginningOfLine  : false
 ! Have delete work like I expect
@@ -20,16 +18,8 @@ XTerm*faceSize              : 9
 ! ESC.
 ! This might be needed to use Meta+[0-9] among others in tmux
 XTerm*vt100.metaSendsEscape : true
-! Select word on two clicks
-XTerm*on2Clicks             : word
-! Select whole line on three clicks
-XTerm*on3Clicks             : line
 ! Should the scrollbar be displayed
 XTerm*scrollBar             : false
-! Pressing a key automatically scrolls to the bottom
-XTerm*scrollKey             : true
-! Tells xterm to use CLIPBOARD for SELECT tokens in the selection mechanism
-XTerm*selectToClipboard     : true
 
 ! Color
 ! http://futurile.net/2016/06/15/xterm-256color-themes-molokai-terminal-theme/
