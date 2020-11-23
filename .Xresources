@@ -7,29 +7,16 @@ XTerm*vt100.geometry        : 90x23
 XTerm*termName              : xterm-256color
 ! Turn off text cursor blinking, if I need to use: emacs -nw, I need this
 XTerm*cursorBlink           : never
-! Dont include a trailing newline in the selection
-XTerm*cutNewline            : false
 ! Clicking a line selects only from the current word forward
 XTerm*cutToBeginningOfLine  : false
 ! Font
 XTerm*faceName              : DejaVu Sans Mono
 XTerm*faceSize              : 10
-! Meta characters (a character combined with the Meta modifier key) are
-! converted into a two-character sequence with the character itself preceded by
-! ESC.
-! This might be needed to use Meta+[0-9] among others in tmux
-XTerm*vt100.metaSendsEscape : true
-! Select word on two clicks
-XTerm*on2Clicks             : word
-! Select whole line on three clicks
-XTerm*on3Clicks             : line
-! Pressing a key automatically scrolls to the bottom
-XTerm*scrollKey             : true
-! Tells xterm to use CLIPBOARD for SELECT tokens in the selection mechanism
-XTerm*selectToClipboard     : true
 ! Display the scrollbar
 ! Says this is default but I still need this?
 XTerm*scrollBar             : false
+! Tells xterm to use CLIPBOARD for SELECT tokens in the selection mechanism
+XTerm*selectToClipboard     : true
 
 ! Color
 ! http://futurile.net/2016/06/15/xterm-256color-themes-molokai-terminal-theme/

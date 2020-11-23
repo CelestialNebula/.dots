@@ -1,12 +1,11 @@
 borderwidth 1
 color activeborder green
 color font black
-color selfont green
+color selfont gold
 color menubg gray
 color urgencyborder red
 fontname "DejaVu Serif"
 gap 1 1 0 0
-snapdist 2
 
 command xterm   /usr/bin/xterm
 command emacs   /usr/bin/emacs
@@ -29,12 +28,6 @@ autogroup 2 "emacs,Emacs"
 # S = Shift key
 # 4 = Mod4 (Super, Windows key)
 
-unbind-mouse M-1   # Move window
-unbind-mouse CM-1  # Toggle group membership of current window
-unbind-mouse M-2   # Resize window
-unbind-mouse M-3   # Lower window
-unbind-mouse CMS-3 # Hide window
-
 bind-mouse 4-1 window-move
 bind-mouse 4-3 window-resize
 bind-mouse 4C-1 window-lower
@@ -44,9 +37,7 @@ unbind-key all
 bind-key 4C-r  restart # Restart cwm
 bind-key 4C-c  quit    # Quit cwm
 bind-key 4-1   menu-exec
-# https://github.com/leahneukirchen/cwm/commit/535cf541c8fb229d3223dbed5da3b6400a12abe6#diff-1e81f9e225a416efde27708c27aaa15d
-# This is changed to 'window-close' to match OpenBSD on v6.6+ (fedora is currently v6.3)
-bind-key 4-2   window-delete
+bind-key 4-2   window-close
 bind-key 4-3   window-cycle
 bind-key 4-4   group-toggle-2
 bind-key 4-5   window-cycle-ingroup
@@ -57,8 +48,6 @@ bind-key 4-e   window-snap-right
 bind-key 4-k   window-maximize
 bind-key 4-q   window-vmaximize
 bind-key 4-j   window-hmaximize
-# https://github.com/leahneukirchen/cwm/commit/9fb725f417a5cee1be4a768c94e49c4f0ce65dcf
-# vtile|htile will work on stuff not in groups in v6.7 (fedora is currently v6.3)
 bind-key 4S-q  window-vtile
 bind-key 4S-j  window-htile
 bind-key 4C-1  "/usr/bin/xterm"
