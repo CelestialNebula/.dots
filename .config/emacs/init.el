@@ -1,7 +1,7 @@
 ;;; -*- lexical-binding: t; -*-
-;;
+
 ;; Do Ut Des
-;;
+
 ;; Emacs outshines all other editing software in approximately the same way
 ;; that the noonday sun does the stars.  It is not just bigger and brighter;
 ;; it simply makes everything else vanish.
@@ -13,36 +13,40 @@
 ;; https://gitlab.com/LuisHP/emacs.d/-/tree/master
 
 ;; *ToDo*
-;; 1. If I use emacs --daemon, I'll have to fix some things.  It currently also
+;; 1. If I use emacs --daemon, I'll have to fix some things.  It currently
 ;; starts in insert mode (but still shows the 'C').
 ;; This is the issue about it starting in insert mode:
 ;; https://github.com/xahlee/xah-fly-keys/issues/103
 ;; 2. themes/mode-line: Interesting read, about some problems I might run into:
 ;; https://stackoverflow.com/questions/22127337/emacs-how-to-get-the-default-theme/22129687#22129687
-;; Can I make a file/function with just the edits I did to the theme and just
-;; have it load that after the theme?  Will need to look more into this:
-;; https://old.reddit.com/r/emacs/comments/geisxd/what_is_a_best_way_to_modify_theme_downloaded/fpnns1q/
 ;; Change the 'mode-name' colour for specific stuff, like running
-;; 'find-grep|rgrep' and see how the process thing has a colour (it looks really
-;; out of place when it's on the non-active mode-line when the 'mode-name'
-;; itself isn't in colour).
+;; 'find-grep|rgrep' and see how 'mode-line-process' has a colour (it looks
+;; really out of place when it's on the non-active mode-line when the
+;; 'mode-name' itself isn't in colour).
 ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Mode-Line-Format.html#Mode-Line-Format
-;; 3. Anyway to make image-dired use something that's not persistent (/tmp/)?
-;; I don't need/want to keep the thumbnails.  (Can I point it to the null-device
-;; just like custom-file?)
-;; https://github.com/emacs-mirror/emacs/blob/master/lisp/image-dired.el
-;; https://github.com/emacs-mirror/emacs/blob/master/lisp/image-dired.el#L624
-;; 4. 'initial-major-mode' Any other way to do this for the starting buffer?
-;; Cause this is every buffer that's new after the starting too. Which means I
-;; wouldn't get the 'show-trailing-whitespace' on new buffers.
-;; 5. How can I remap stuff that needs to be "nested" under another keymap?
+;; In org-mode the comment (=) format takes precedent over the spelling one
+;; (flyspell), ie. inside comments it won't show that something is spelled
+;; wrong.
+;; So how do I make the spelling one take precedent?  Inside comments (=) '~'
+;; already takes precedent.
+;; Maybe its something 'srcery-theme' changed.  Because when you highlight in a
+;; comment it makes the whole thing stand out.  For example when you highlight
+;; '=' and it has '~' (which is blue) it will show that section as blue inside
+;; the comment.
+;; 3. How can I remap stuff that needs to be "nested" under another keymap?
 ;; The keybinds under org & elpy, I need to only be active under their
 ;; respective modes only in 'xah-fly-command-map' because if I just leave
 ;; it to 'org|elpy-mode-map' it steals my SPC in insert mode?
-;; I don't get it cause I mapped 'isearch-forward-regexp' on 'SPC t b' and
-;; that didn't steal my SPC?  Is it cause the dot keymap is empty by default?
+;; Actually I need some of the org stuff for dired like: 'org-store-link'
 ;; Maybe something involving the following:
-;; derived-mode-p, xah-fly-dot-keymap, xah-fly-command-map, xah-fly--define-keys
+;; derived-mode-p, xah-fly-dot-keymap, xah-fly-command-map,
+;; xah-fly--define-keys, xah-fly-insert-state-q
+;; Maybe do something like this?
+;; https://github.com/xahlee/xah-fly-keys/issues/107
+;; https://github.com/xahlee/xah-fly-keys/issues/108
+;; The best way is probably something like 'evil-define-key':
+;; https://github.com/emacs-evil/evil/search?q=evil-define-key
+;; https://emacs.stackexchange.com/questions/10856/how-do-i-set-up-key-bindings-for-modes-in-a-specific-evil-state
 
 ;; Package Setup with straight.el
 (defvar bootstrap-version)
@@ -92,10 +96,11 @@
   (global-display-line-numbers-mode t)
   (global-hl-line-mode t)
   (setq toggle-maximize-list '())
-  (defun toggle-maximize-window ()
+  (defun my/toggle-maximize-window ()
     "Maximize current window (like default tmux: prefix+z).
-Doesn't keep your spot: zoom at line 100 then go to 500
-and unzoom and it's back at 100.
+Doesn't keep your spot: zoom at line 100 then go to 500 and unzoom and it's
+back at 100.  And it can become nested, so always close other windows
+before you toggle again.
 
 https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
     (interactive)
@@ -103,11 +108,10 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
 	(progn
 	  (set 'toggle-maximize-list 'false)
 	  (jump-to-register '_))
-      (progn
-	(set 'toggle-maximize-list 'true)
-	(window-configuration-to-register '_)
-	(delete-other-windows))))
-  (defun calendar-show-week (arg)
+      (set 'toggle-maximize-list 'true)
+      (window-configuration-to-register '_)
+      (delete-other-windows)))
+  (defun my/calendar-show-week (arg)
     "Displaying week number in calendar-mode."
     (interactive "P")
     (copy-face font-lock-constant-face 'calendar-iso-week-face)
@@ -121,13 +125,13 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
                                (calendar-absolute-from-gregorian
                                 (list month day year)))))
                  'font-lock-face 'calendar-iso-week-face))))
-  (calendar-show-week t)
-  (defun whitelist-whitespace-hook ()
+  (my/calendar-show-week t)
+  (defun my/whitelist-whitespace-hook ()
     "'show-trailing-whitespace'"
     (setq show-trailing-whitespace t))
-  (add-hook 'org-mode-hook 'whitelist-whitespace-hook)
-  (add-hook 'text-mode-hook 'whitelist-whitespace-hook)
-  (add-hook 'prog-mode-hook 'whitelist-whitespace-hook)
+  (add-hook 'org-mode-hook 'my/whitelist-whitespace-hook)
+  (add-hook 'text-mode-hook 'my/whitelist-whitespace-hook)
+  (add-hook 'prog-mode-hook 'my/whitelist-whitespace-hook)
   ;; https://amitp.blogspot.com/2011/08/emacs-custom-mode-line.html
   ;; https://github.com/cryon/dotemacs/blob/master/auto/modeline.el
   (setq-default
@@ -141,7 +145,7 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
      mode-line-modified
      mode-line-remote
      mode-line-client			; Is it an emacsclient frames
-     " %4l:"				; Line position
+     mode-line-misc-info
      ;; Current column number, including warning for +80 columns
      (:eval
       (propertize "%3C"
@@ -178,11 +182,11 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
      ;; Buffer path
      " "
      (:propertize
-      (:eval (shorten-directory default-directory 30)))))
+      (:eval (my/shorten-directory default-directory 30)))))
   ;; https://emacs.stackexchange.com/questions/10955/customize-vc-mode-appearance-in-mode-line/10957#10957
   (setcdr (assq 'vc-mode mode-line-format)
           '((:eval (replace-regexp-in-string "^.*:\\|.*-" "" vc-mode))))
-  (defun shorten-directory (dir max-length)
+  (defun my/shorten-directory (dir max-length)
     "Show up to `MAX-LENGTH' characters of a directory name `DIR'."
     (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
           (output ""))
@@ -194,7 +198,7 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
       (when path
         (setq output (concat "Ψ/" output)))
       output))
-  (defun mode-line-double-flash ()
+  (defun my/mode-line-double-flash ()
     "Flash the mode line twice during an exception (like ^g)."
     (let ((flash-sec (/ 1.0 20)))
       (invert-face 'mode-line)
@@ -202,13 +206,13 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
       (run-with-timer (* 2 flash-sec) nil #'invert-face 'mode-line)
       (run-with-timer (* 3 flash-sec) nil #'invert-face 'mode-line)))
   (setq visible-bell nil
-        ring-bell-function 'mode-line-double-flash))
+        ring-bell-function 'my/mode-line-double-flash))
 
 (use-package dired
   :custom
   (dired-recursive-copies 'always)
   (delete-by-moving-to-trash t "Use FreeDesktop.orgs trash")
-  (dired-listing-switches "--all --escape --group-directories-first --human-readable -l")
+  (dired-listing-switches "--all --group-directories-first --human-readable -l")
   :bind (:map dired-mode-map
               ("z" . shell-command)))
 
@@ -234,13 +238,13 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
   ;; (initial-major-mode 'fundamental-mode)
   (initial-major-mode 'text-mode)
   :config
-  (defun emacs-startup-in-echo-area ()
+  (defun my/emacs-startup-in-echo-area ()
     "Display the package number/loading time in the echo area."
     (message "GNU/Emacs loaded %d packages in %s seconds."
 	     (setq mylist (length (directory-files "~/.config/emacs/straight/build" nil "[^.]")))
              (format "%.3f"
                      (float-time (time-subtract (current-time) before-init-time)))))
-  (add-hook 'emacs-startup-hook 'emacs-startup-in-echo-area))
+  (add-hook 'emacs-startup-hook 'my/emacs-startup-in-echo-area))
 
 (use-package xah-fly-keys
   :straight t
@@ -250,8 +254,12 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
   :config
   (xah-fly-keys t)
   :bind (:map xah-fly-command-map
-	      ("SPC t b" . isearch-forward-regexp)
-	      ("SPC z" . toggle-maximize-window)))
+	      ("'" . xah-fill-or-unfill)
+	      ("SPC '" . xah-reformat-lines)
+	      ("b" . isearch-forward-regexp)
+	      ("SPC c '" . find-file-read-only)
+	      ("SPC r s" . string-rectangle)
+	      ("SPC z" . my/toggle-maximize-window)))
 
 (use-package org
   :straight t
@@ -264,19 +272,66 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
   (org-src-tab-acts-natively t)
   (org-edit-src-content-indentation 0)
   :bind (:map xah-fly-dot-keymap
+  ;; :bind (:map org-mode-map
 	      ("s" . org-store-link)
 	      ("l" . org-insert-link)
 	      ("t" . org-todo)
 	      ("o" . org-open-at-point)
-	      ("a" . org-mark-ring-goto)))
+	      ("a" . org-mark-ring-goto)
+	      ;; ("" . org-insert-structure-template)
+	      ;; ("" . org-export-dispatch)
+  ))
 
 (use-package srcery-theme
   :straight t
   :init
-  (add-to-list 'custom-theme-load-path "~/.config/emacs/themes/")
-  (load-theme 'srcery t)
+  (advice-add 'load-theme :after #'my/customize-srcery-theme)
   :custom
-  (srcery-org-height nil))
+  (srcery-org-height nil)
+  ;; https://emacs.stackexchange.com/questions/48365/custom-theme-set-faces-does-not-work-in-emacs-27/52804#52804
+  (custom--inhibit-theme-enable nil)
+  :config
+  (defun my/customize-srcery-theme (_theme &rest _args)
+    "Tweaks to make srcery-theme more appealing.
+
+https://old.reddit.com/r/emacs/comments/geisxd/what_is_a_best_way_to_modify_theme_downloaded/fpnns1q/"
+    (when (member 'srcery custom-enabled-themes)
+      (make-face 'mode-line-80col-face)
+      (make-face 'mode-line-buffer-face)
+      (make-face 'mode-line-misc-face)
+      ;; colors from srcery-theme.el
+      (let* ((srcery-class '((class color) (min-colors 257)))
+	     (srcery-256-class '((class color) (min-colors 89)))
+	     (srcery-256-red            "red")
+	     (srcery-256-green          "green"))
+	(custom-theme-set-faces
+	 'srcery
+	 `(fringe
+	   ((,srcery-class (:background "#000000"))))
+	 `(flyspell-duplicate
+	   ((,srcery-class (:foreground ,srcery-green :underline (:style wave)))
+	    (,srcery-256-class (:foreground ,srcery-256-green :underline t))))
+	 `(flyspell-incorrect
+	   ((,srcery-class (:foreground ,srcery-red :underline (:style wave)))
+	    (,srcery-256-class (:foreground ,srcery-256-red :underline t))))
+	 `(line-number
+	   ((,srcery-class (:foreground "#918175" :background "#0f0e0d"))
+	    (,srcery-256-class (:foreground "#918175" :background "#0f0e0d"))))
+	 `(mode-line-inactive
+	   ((,srcery-class (:foreground "#918175" :background "#303030"))
+	    (,srcery-256-class (:foreground "#918175" :background "#303030"))))
+	 `(mode-line-80col-face
+	   ((,srcery-class (:foreground "#ff7f50" :background "#0f0e0d"))
+	    (,srcery-256-class (:foreground "#ff7f50" :background "#0f0e0d"))))
+	 `(mode-line-buffer-face
+	   ((,srcery-class (:weight bold))
+	    (,srcery-256-class (:weight bold))))
+	 `(mode-line-misc-face
+	   ((,srcery-class (:foreground "#ff7f50"))
+	    (,srcery-256-class (:foreground "#ff7f50")))))))))
+;; I can't get this to work with 'my/customize-srcery-theme' when I put
+;; it under the use-package section.
+(load-theme 'srcery t)
 
 (use-package which-key
   :straight t
@@ -287,16 +342,16 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
   (which-key-mode))
 
 ;; Programming
-(defun display-header ()
+(defun my/display-header ()
   "Display the heading with the path to the file."
   (setq header-line-format
         '("%f")))
-(add-hook 'prog-mode-hook 'display-header)
+(add-hook 'prog-mode-hook 'my/display-header)
 
-(defun prog-truncate-lines ()
+(defun my/prog-truncate-lines ()
   "Turn on 'truncate-lines'."
   (toggle-truncate-lines t))
-(add-hook 'prog-mode-hook 'prog-truncate-lines)
+(add-hook 'prog-mode-hook 'my/prog-truncate-lines)
 
 ;; Indentation can't insert tabs
 ;; I might not need this with editerconfig?
@@ -326,6 +381,7 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
 		  elpy-module-django))
   (elpy-get-info-from-shell t)
   :bind (:map xah-fly-dot-keymap
+  ;; :bind (:map elpy-mode-map
 	      ;; Interactive Python
 	      ("w" . elpy-shell-switch-to-shell)
 	      ("u" . elpy-shell-send-region-or-buffer)
@@ -352,25 +408,15 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
 	      ("r" . elpy-set-project-root)
 	      ("b" . elpy-rgrep-symbol)))
 
-;; Doesn't work in terminal
-(use-package company-quickhelp
-  :straight t
-  :hook (prog-mode . company-quickhelp-mode)
-  :custom
-  (company-quickhelp-delay 0.1)
-  (company-quickhelp-max-lines 30)
-  (company-quickhelp-color-foreground "purple")
-  (company-quickhelp-color-background "gray"))
-
 ;; https://stackoverflow.com/questions/15958448/settings-only-for-gui-terminal-emacs/15962540#15962540
-;; (defun is-in-terminal ()
+;; (defun my/is-in-terminal ()
 ;;   "Return t if GNU/Emacs is running in a terminal."
 ;;   (not (display-graphic-p)))
 
 ;; (defmacro when-term (&rest body)
 ;;   "Works just like `progn' but will only evaluate expressions in VAR when Emacs
 ;; is running in a terminal else just nil."
-;;   `(when (is-in-terminal) ,@body))
+;;   `(when (my/is-in-terminal) ,@body))
 
 ;; (when-term
 ;;  )
