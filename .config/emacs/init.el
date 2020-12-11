@@ -13,10 +13,9 @@
 ;; https://gitlab.com/LuisHP/emacs.d/-/tree/master
 
 ;; *ToDo*
-;; 1. If I use emacs --daemon, I'll have to fix some things.  It currently
+;; 1. If I use ~emacs --daemon~, I'll have to fix some things.  It currently
 ;; starts in insert mode (but still shows the 'C').
-;; This is the issue about it starting in insert mode:
-;; https://github.com/xahlee/xah-fly-keys/issues/103
+;; This is the issue: https://github.com/xahlee/xah-fly-keys/issues/103
 ;; 2. themes/mode-line: Interesting read, about some problems I might run into:
 ;; https://stackoverflow.com/questions/22127337/emacs-how-to-get-the-default-theme/22129687#22129687
 ;; Change the 'mode-name' colour for specific stuff, like running
@@ -25,19 +24,22 @@
 ;; 'mode-name' itself isn't in colour).
 ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Mode-Line-Format.html#Mode-Line-Format
 ;; In org-mode the comment (=) format takes precedent over the spelling one
-;; (flyspell), ie. inside comments it won't show that something is spelled
-;; wrong.
-;; So how do I make the spelling one take precedent?  Inside comments (=) '~'
-;; already takes precedent.
-;; Maybe its something 'srcery-theme' changed.  Because when you highlight in a
-;; comment it makes the whole thing stand out.  For example when you highlight
-;; '=' and it has '~' (which is blue) it will show that section as blue inside
-;; the comment.
+;; (flyspell) inside comments, so I can't see if something is spelled wrong.
+;; So how do I make the spelling one take precedent?
+;; Inside comments (=) '~' already takes precedent.  So when you highlight '='
+;; (which is orange) and it has '~' (which is blue) it will show that section as
+;; blue inside the comment.
+;; Maybe something with 'font-lock-face'?
+;; https://www.emacswiki.org/emacs/FaceMenuPlus
+;; https://www.gnu.org/software/emacs/manual/html_node/elisp/Text-Properties.html
 ;; 3. How can I remap stuff that needs to be "nested" under another keymap?
 ;; The keybinds under org & elpy, I need to only be active under their
 ;; respective modes only in 'xah-fly-command-map' because if I just leave
 ;; it to 'org|elpy-mode-map' it steals my SPC in insert mode?
 ;; Actually I need some of the org stuff for dired like: 'org-store-link'
+;; I don't think it can be it's own mode cause if I open another buffer that has
+;; new keybinds set it will mess up, tho I might be able to just have it
+;; continuously check which major-mode I'm in and reset?
 ;; Maybe something involving the following:
 ;; derived-mode-p, xah-fly-dot-keymap, xah-fly-command-map,
 ;; xah-fly--define-keys, xah-fly-insert-state-q
@@ -47,6 +49,8 @@
 ;; The best way is probably something like 'evil-define-key':
 ;; https://github.com/emacs-evil/evil/search?q=evil-define-key
 ;; https://emacs.stackexchange.com/questions/10856/how-do-i-set-up-key-bindings-for-modes-in-a-specific-evil-state
+;; Maybe follow this?
+;; https://github.com/jwiegley/use-package/issues/885
 
 ;; Package Setup with straight.el
 (defvar bootstrap-version)
@@ -127,11 +131,13 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
                  'font-lock-face 'calendar-iso-week-face))))
   (my/calendar-show-week t)
   (defun my/whitelist-whitespace-hook ()
-    "'show-trailing-whitespace'"
+    "Turn on 'show-trailing-whitespace' for specified modes.
+Too much stuff has trailing whitespace when you just turn it on globally."
     (setq show-trailing-whitespace t))
   (add-hook 'org-mode-hook 'my/whitelist-whitespace-hook)
   (add-hook 'text-mode-hook 'my/whitelist-whitespace-hook)
   (add-hook 'prog-mode-hook 'my/whitelist-whitespace-hook)
+  (add-hook 'conf-mode-hook 'my/whitelist-whitespace-hook)
   ;; https://amitp.blogspot.com/2011/08/emacs-custom-mode-line.html
   ;; https://github.com/cryon/dotemacs/blob/master/auto/modeline.el
   (setq-default
@@ -243,9 +249,18 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
     (message "GNU/Emacs loaded %d packages in %s seconds."
 	     (setq mylist (length (directory-files "~/.config/emacs/straight/build" nil "[^.]")))
              (format "%.3f"
-                     (float-time (time-subtract (current-time) before-init-time)))))
+                     (float-time
+		      ;; Seems to make more sense to use 'after-init-time' but
+		      ;; that gives a faster time.
+		      ;; (time-subtract after-init-time before-init-time)))))
+		      (time-subtract (current-time) before-init-time)))))
   (add-hook 'emacs-startup-hook 'my/emacs-startup-in-echo-area))
 
+;; Not really a bug (just visually) but something I need to keep in mind.  In
+;; 'whitespace-mode' if TAB is after a longer word, it may only TAB out to ~1
+;; space.  Without 'whitespace-mode' it will look normal and match up but if you
+;; call 'whitespace-mode' since TAB's represent 8 spaces it moves to look like 8
+;; and messes up the alignment.
 (use-package xah-fly-keys
   :straight t
   :demand t
@@ -257,7 +272,6 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
 	      ("'" . xah-fill-or-unfill)
 	      ("SPC '" . xah-reformat-lines)
 	      ("b" . isearch-forward-regexp)
-	      ("SPC c '" . find-file-read-only)
 	      ("SPC r s" . string-rectangle)
 	      ("SPC z" . my/toggle-maximize-window)))
 
@@ -278,9 +292,8 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
 	      ("t" . org-todo)
 	      ("o" . org-open-at-point)
 	      ("a" . org-mark-ring-goto)
-	      ;; ("" . org-insert-structure-template)
-	      ;; ("" . org-export-dispatch)
-  ))
+	      ("n" . org-insert-structure-template)
+	      ("d" . org-export-dispatch)))
 
 (use-package srcery-theme
   :straight t
@@ -366,6 +379,23 @@ https://old.reddit.com/r/emacs/comments/geisxd/what_is_a_best_way_to_modify_them
 (use-package flycheck
   :straight t
   :hook ((prog-mode elpy-mode-hook) . flycheck-mode))
+
+;; Shell
+(use-package sh-mode
+  :init
+  (defun my/manual-posix-sh-shellcheck ()
+    "I don't think flycheck can just do POSIX sh?  So this takes the current file
+and runs 'shellcheck --check-sourced -s sh --external-sources '."
+    (interactive)
+    (shell-command
+     (concat "shellcheck --check-sourced -s sh --external-sources "
+	     (shell-quote-argument buffer-file-name))))
+  :custom
+  (sh-basic-offset 8)
+  :bind (:map xah-fly-dot-keymap
+  ;; This doesn't seem to do anything?
+  ;; :bind (:map sh-mode-map
+	      ("f" . my/manual-posix-sh-shellcheck)))
 
 ;; Python
 (use-package python-mode

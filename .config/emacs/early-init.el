@@ -1,8 +1,9 @@
 ;;; -*- lexical-binding: t; -*-
+
 ;; Emacs 27+ introduces early-init.el, which is run before init.el,
 ;; before package and UI initialization happens.
+;; https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#how-does-doom-start-up-so-quickly
 
-;; https://github.com/hlissner/doom-emacs/blob/665b627b7c07c8d29ec8d334588cecc2ba308248/docs/faq.org#how-does-doom-start-up-so-quickly
 (setq gc-cons-threshold most-positive-fixnum ; 2^61 bytes
       gc-cons-percentage 0.6)
 
