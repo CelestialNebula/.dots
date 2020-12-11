@@ -1,32 +1,19 @@
-borderwidth 1
 color activeborder green
-color font black
 color selfont gold
 color menubg gray
-color urgencyborder red
-fontname "DejaVu Serif"
+fontname 'DejaVu Serif'
 gap 1 1 0 0
 
 command xterm   /usr/bin/xterm
 command emacs   /usr/bin/emacs
-command work    "/usr/bin/firefox -P work --no-remote"
-command play    "/usr/bin/firefox -P play --no-remote"
+command work    '/usr/bin/firefox -P work --no-remote'
+command play    '/usr/bin/firefox -P play --no-remote'
 
-autogroup 1 "xterm,XTerm"
-autogroup 2 "emacs,Emacs"
+autogroup 1 'xterm,XTerm'
+autogroup 2 'emacs,Emacs'
 
-# Recongnised keys:
-# Buttons:
-# 1 = Left mouse button
-# 2 = Middle mouse button
-# 3 = Right mouse button
-# 4 = Scroll up mouse button
-# 5 = Scroll down mouse button
-# Modifiers:
-# C = Ctrl
-# M = Meta key (Alt)
-# S = Shift key
-# 4 = Mod4 (Super, Windows key)
+# So the mouse won't jump
+ignore 'taskbar'
 
 bind-mouse 4-1 window-move
 bind-mouse 4-3 window-resize
@@ -34,8 +21,8 @@ bind-mouse 4C-1 window-lower
 bind-mouse 4C-3 window-hide
 
 unbind-key all
-bind-key 4C-r  restart # Restart cwm
-bind-key 4C-c  quit    # Quit cwm
+bind-key 4C-r  restart
+bind-key 4C-c  quit
 bind-key 4-1   menu-exec
 bind-key 4-2   window-close
 bind-key 4-3   window-cycle
@@ -50,10 +37,10 @@ bind-key 4-q   window-vmaximize
 bind-key 4-j   window-hmaximize
 bind-key 4S-q  window-vtile
 bind-key 4S-j  window-htile
-bind-key 4C-1  "/usr/bin/xterm"
-bind-key 4C-2  "/usr/bin/emacs"
-bind-key 4C-3  "/home/USER/.scripts/taskbar.sh"
-bind-key 4C-4  "/usr/bin/firefox -P work --no-remote"
-bind-key 4C-5  "/usr/bin/firefox -P play --no-remote"
-bind-key 4C-k  "/usr/bin/xkill"
-bind-key 4C-l  "/usr/bin/slock"
+bind-key 4C-1  /usr/bin/xterm
+bind-key 4C-2  /usr/bin/emacs
+bind-key 4C-3  'xterm -class taskbar -e "$HOME/.scripts/taskbar"'
+bind-key 4C-4  '/usr/bin/firefox -P work --no-remote'
+bind-key 4C-5  '/usr/bin/firefox -P play --no-remote'
+bind-key 4C-k  /usr/bin/xkill
+bind-key 4C-l  /usr/bin/slock
