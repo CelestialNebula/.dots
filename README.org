@@ -20,8 +20,6 @@ When you are done any file within the ~$HOME~ folder can be versioned with
 normal commands, replacing ~git~ with your newly created ~dots~ alias:
 #+begin_example
   $ dots status
-  $ dots add .tmux.conf
-  $ dots commit -m "Added .tmux.conf"
   $ dots add .Xresources
   $ dots commit -m "Added .Xresources"
   $ dots push
