@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+# strftime = format date and time
+
+while true; do
+	Date=$(date "+(365/%j) %F | %B %d, %A")
+	Clock=$(date "+%R")
+	Uptime=$(uptime | sed -E -e 's/^.*up/up/' -e 's/[0-9]+ user.* l/l/' -e '/ /s/  */ /g')
+	Temp=$(sysctl hw.sensors.acpitz0 | sed -e 's/^.*=/CPU Temp /' -e 's/d.*$/C/')
+	Battery=$(apm | grep "Battery" | sed -e 's/Battery state: [a-z]*,/Battery/' -e 's/%.*,/%,/')
+	printf "%s | %s | %s | %s | %s" "$Date" "$Clock" "$Uptime" "$Temp" "$Battery"
+	sleep 10
+	builtin exit
+done
