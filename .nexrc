@@ -4,7 +4,5 @@ set lock
 set number
 set report=1
 set ruler
-set searchincr
 set showmode
 set verbose
-set wraplen=80

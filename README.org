@@ -35,10 +35,10 @@ Clone your dotfiles into a bare repository:
 #+begin_example
 $ git clone --bare https://github.com/CelestialNebula/.dots.git $HOME/.dots
 #+end_example
-Check the content of the ~OpenBSD~ branch from the bare repository to your
+Check the content of the ~openbsd~ branch from the bare repository to your
 ~$HOME~:
 #+begin_example
-$ dots checkout OpenBSD
+$ dots checkout openbsd
 #+end_example
 
 *Note*: The above might fail with something like this message: "The following
@@ -49,7 +49,7 @@ delete them.
 
 Re-run the checkout if you had problems:
 #+begin_example
-$ dots checkout OpenBSD
+$ dots checkout openbsd
 #+end_example
 Set the flag ~showUntrackedFiles~ to ~no~ on this specific (local) repository:
 #+begin_example
