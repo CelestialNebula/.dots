@@ -19,12 +19,10 @@ $ dots config status.showUntrackedFiles no
 When you are done any file within the ~$HOME~ folder can be versioned with
 normal commands, replacing ~git~ with your newly created ~dots~ alias:
 #+begin_example
-  $ dots status
-  $ dots add .tmux.conf
-  $ dots commit -m "Added .tmux.conf"
-  $ dots add .Xresources
-  $ dots commit -m "Added .Xresources"
-  $ dots push
+$ dots status
+$ dots add .Xresources
+$ dots commit -m "Added .Xresources"
+$ dots push
 #+end_example
 * Installing your dotfiles onto a new system
 Alias for it while I set it up (as long as this shell is open & only in this
