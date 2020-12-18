@@ -1,0 +1,4 @@
+[global]
+	geometry = "0x5-10+10"
+	alignment = center
+	word_wrap = true
