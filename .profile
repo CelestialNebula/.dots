@@ -1,11 +1,16 @@
-# $OpenBSD: dot.profile,v 1.5 2018/02/02 02:29:54 yasuoka Exp $
-#
-# sh/ksh initialization
-
 # /bin:/usr/bin:/sbin:/usr/sbin:/usr/X11R6/bin:/usr/local/bin:/usr/local/sbin
-PATH=$PATH:$HOME/.scripts:$HOME/.local/bin
+PATH=$PATH:"$HOME/.scripts:$HOME/.local/bin"
 export PATH HOME TERM
 
+# XDG stuff
+# https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+
+export ENV="$HOME/.config/ksh/.kshrc"
 export VISUAL='vi'
 export MANPAGER='less -i'
-export PYTHONSTARTUP=$HOME/.config/python/.pythonstartup
+export PYTHONSTARTUP="$HOME/.config/python/.pythonstartup"
+
+/usr/X11R6/bin/xrdb "$XDG_CONFIG_HOME/.Xresources"

@@ -9,5 +9,5 @@ while true; do
 	Battery=$(apm | grep "Battery" | sed -e 's/Battery state: [a-z]*,/Battery/' -e 's/%.*,/%,/')
 	printf "%s | %s | %s | %s | %s" "$Date" "$Clock" "$Uptime" "$Temp" "$Battery"
 	sleep 10
-	builtin exit
+	exit
 done
