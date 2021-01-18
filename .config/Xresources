@@ -1,7 +1,6 @@
 ! Enable it by running:
-! $ xrdb .Xresources
+! $ xrdb ~/.config/Xresources
 
-! Xterm size
 XTerm*vt100.geometry		: 90x24
 ! Set TERM env variable to use 256 colors
 XTerm*termName			: xterm-256color
@@ -12,8 +11,6 @@ XTerm*cutToBeginningOfLine	: false
 ! Font
 XTerm*faceName			: DejaVu Sans Mono
 XTerm*faceSize			: 11
-! Says this is default but I still need this?
-XTerm*scrollBar			: false
 ! Tells xterm to use CLIPBOARD for SELECT tokens in the selection mechanism
 XTerm*selectToClipboard		: true
 ! Allow pasting with ^Shift K
@@ -21,7 +18,6 @@ XTerm*vt100.translations	: #override \n\
 					Ctrl Shift <Key>K: insert-selection(CLIPBOARD)
 
 taskbar.vt100.geometry		: 160x1+0
-! Font
 taskbar*faceName		: DejaVu Sans Mono
 taskbar*faceSize		: 10
 taskbar*omitTranslation		: popup-menu

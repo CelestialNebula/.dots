@@ -1,0 +1,46 @@
+color activeborder green
+color selfont gold
+color menubg gray
+fontname 'DejaVu Serif'
+gap 1 1 0 0
+
+command xterm	xterm
+command emacs	'emacsclient -ca ""'
+command zz	'firefox -P zz --no-remote'
+command qq	'firefox -P qq --no-remote'
+
+autogroup 1 'xterm,XTerm'
+autogroup 2 'emacs,Emacs'
+
+ignore 'taskbar'
+ignore 'mpv'
+
+bind-mouse 4-1	window-move
+bind-mouse 4-3	window-resize
+bind-mouse 4C-1	window-lower
+bind-mouse 4C-3	window-hide
+
+unbind-key all
+bind-key 4C-r	restart
+bind-key 4C-c	quit
+bind-key 4-1	menu-exec
+bind-key 4-2	window-close
+bind-key 4-3	window-cycle
+bind-key 4-4	window-rcycle
+bind-key 4-5	window-cycle-ingroup
+bind-key 4-a	window-snap-up
+bind-key 4-u	window-snap-down
+bind-key 4-o	window-snap-left
+bind-key 4-e	window-snap-right
+bind-key 4-k	window-maximize
+bind-key 4-q	window-vmaximize
+bind-key 4-j	window-hmaximize
+bind-key 4S-q	window-vtile
+bind-key 4S-j	window-htile
+bind-key 4C-1	xterm
+bind-key 4C-2	'emacsclient -ca ""'
+bind-key 4C-3	'xterm -class taskbar -e "$HOME/.scripts/taskbar"'
+bind-key 4C-4	'firefox -P zz --no-remote'
+bind-key 4C-5	'firefox -P qq --no-remote'
+bind-key 4C-k	xkill
+bind-key 4C-l	slock
