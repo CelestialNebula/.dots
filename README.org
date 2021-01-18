@@ -20,8 +20,8 @@ When you are done any file within the ~$HOME~ folder can be versioned with
 normal commands, replacing ~git~ with your newly created ~dots~ alias:
 #+begin_example
   $ dots status
-  $ dots add .Xresources
-  $ dots commit -m "Added .Xresources"
+  $ dots add ~/.config/Xresources
+  $ dots commit -m "Added ~/.config/Xresources"
   $ dots push
 #+end_example
 * Installing your dotfiles onto a new system
@@ -41,7 +41,7 @@ Check the content of the ~openbsd~ branch from the bare repository to your
 $ dots checkout openbsd
 #+end_example
 
-*Note*: The above might fail with something like this message: "The following
+*Note:* The above might fail with something like this message: "The following
 untracked working tree files would be overwritten by checkout", etc.  This is
 because your ~$HOME~ folder might already have some stock configuration files
 which would be overwritten by Git.  Back up the files if you need them if not

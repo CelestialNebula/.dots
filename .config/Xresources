@@ -1,7 +1,6 @@
 ! Enable it by running:
-! $ xrdb .Xresources
+! $ xrdb ~/.config/Xresources
 
-! Xterm size
 XTerm*vt100.geometry		: 90x24
 ! Set TERM env variable to use 256 colors
 XTerm*termName			: xterm-256color
@@ -20,7 +19,6 @@ XTerm*vt100.translations	: #override \n\
 					Ctrl Shift <Key>K: insert-selection(CLIPBOARD)
 
 taskbar.vt100.geometry		: 160x1+0
-! Font
 taskbar*faceName		: DejaVu Sans Mono
 taskbar*faceSize		: 10
 taskbar*omitTranslation		: popup-menu
