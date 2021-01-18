@@ -4,7 +4,7 @@
 /repository and not the usual .git local folder./
 
 * The Setup
-This will create a folder ~~/.dots~ which is a Git bare repository. Then create
+This will create a folder =~/.dots= which is a Git bare repository. Then create
 an alias ~dots~ which I will use instead of the regular ~git~ when I want to
 interact with my configuration repository. Hide files you don't explicitly
 track, so ~$ dots status~ and other commands later don't show files you aren't
