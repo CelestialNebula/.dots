@@ -12,7 +12,7 @@ export VISUAL='vi'
 export MANPAGER='less -i'
 # I don't see why I would want less to save history?
 export LESSHISTFILE=/dev/null
-export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/.pythonstartup"
+export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonstartup"
 
 # Autostart X at login
 if [ -z "$DISPLAY" ] && [ "$(tty)" = /dev/tty1 ]; then
