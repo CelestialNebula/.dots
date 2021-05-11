@@ -6,7 +6,9 @@
     background-color: #2A2A2E !important;
 }
 
-/* Hide (seemingly?) useless thumbnail that shows when you bookmark a page. */
+/* Hide useless thumbnail that shows when you bookmark a page.
+   Seems this is for if you have your new tab page display from history and
+   bookmarks (which I don't). */
 #editBookmarkPanelImage {
     display: none !important;
 }
@@ -34,16 +36,43 @@
     border: none !important;
 }
 
-/* Hide the Email image popup in the context menu */
-#context-sendimage, #context-setDesktopBackground {
+/* Context menu */
+/* Hide: Inspect Accessibility Properties */
+menuitem[id="context-inspect-a11y"], #frame-sep {
     display: none !important;
 }
 
-/* Hide the Search option in the context menu */
+/* Hide: Search SEARCHENGINE for selection */
 #context-searchselect {
     display: none !important;
 }
 
+/* Hide: Email image... */
+#context-sendimage, #context-setDesktopBackground {
+    display: none !important;
+}
+
+/* Hide: Add a Keyword for this Search... */
+#context-keywordfield {
+    display: none !important;
+}
+
+/* Hide: Check Spelling */
+#spell-check-enabled {
+    display: none !important;
+}
+
+/* Hide: Manage Logins... */
+#manage-saved-logins, #passwordmgr-items-separator {
+    display: none !important;
+}
+
+/* Hide: Print Selection */
+#context-print-selection, #context-sep-sendlinktodevice {
+    display: none !important;
+}
+
+/* All this is sketch */
 /* Make the context Menu dark */
 /* https://gist.github.com/Guerra24/6d7bc4be8849bb8d6eef3a2a74d68e1f */
 /* If something has a little box for a check mark (for example The Menu Bar and

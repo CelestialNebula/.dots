@@ -10,7 +10,7 @@
 ;; Interesting things others have done:
 ;; https://github.com/caisah/emacs.dz
 ;; https://github.com/a13/emacs.d
-;; https://gitlab.com/LuisHP/emacs.d/-/tree/master
+;; https://gitlab.com/LuisHP/emacs.d
 
 ;; Package Setup with straight.el
 (defvar straight-base-dir
@@ -31,70 +31,49 @@
 (straight-use-package 'use-package)
 
 (use-package emacs
-  :hook ((Info-mode . xah-fly-insert-mode-activate)
-         (Info-selection . xah-fly-insert-mode-activate)
-         (prog-mode . flyspell-prog-mode)
-         (compilation-mode . toggle-truncate-lines))
   :custom
-  (frame-title-format '("Emacs: %*%+%@ | %b | "user-login-name"@"system-name))
-  (inhibit-startup-screen t)
-  (initial-scratch-message nil)
-  (initial-major-mode 'fundamental-mode)
-  (blink-cursor-mode nil)
-  (custom-file null-device "Don't store customization's.")
-  (make-backup-files nil)
   (auto-save-file-name-transforms
    `((".*" ,(expand-file-name "var/auto-saves/" user-emacs-directory) t)))
   (auto-save-list-file-prefix
    (expand-file-name "var/auto-saves/sessions/" user-emacs-directory))
   (bookmark-default-file
-   (expand-file-name "var/bookmarks" user-emacs-directory))
-  (url-configuration-directory
-   (expand-file-name "var/url/configuration/" user-emacs-directory))
-  (url-cache-directory
-   (expand-file-name "var/url/cache/" user-emacs-directory))
+   (expand-file-name "var/bookmarks.el" user-emacs-directory))
   (ido-save-directory-list-file
    (expand-file-name "var/ido-save-directory-list.el" user-emacs-directory))
-  (yas-snippet-dirs
-   (expand-file-name "etc/yasnippet/snippets/" user-emacs-directory))
-  (display-line-numbers-grow-only t)
+  (url-cache-directory
+   (expand-file-name "var/url/cache/" user-emacs-directory))
+  (url-configuration-directory
+   (expand-file-name "var/url/configuration/" user-emacs-directory))
+  (blink-cursor-mode nil)
+  (calendar-week-start-day 6)   ; https://sachachua.com/blog/2010/11/week-beginnings/
+  (display-line-numbers-grow-only t)    ; Still needed for manual calls
   (display-line-numbers-width-start t)
+  ;; https://www.gnu.org/software/emacs/manual/html_node/elisp/File-Local-Variables.html#File-Local-Variables
+  ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Safe-File-Variables.html#Safe-File-Variables
+  ;; https://www.emacswiki.org/emacs/FileLocalVariables
+  (enable-local-variables nil)
+  (enable-local-eval nil)
+  (fill-column 79)
   (require-final-newline t)
+  (uniquify-buffer-name-style 'forward)
+  (word-wrap t)
   (isearch-lazy-count t)
   (use-package-always-defer t)  ; Keep forgetting about this and it's a pain
-  (calendar-week-start-day 6)   ; https://sachachua.com/blog/2010/11/week-beginnings/
-  (show-paren-delay 0)
   :config
-  (show-paren-mode t)
-  (setq-default fill-column 80
-                truncate-lines t
-                word-wrap t)
-  (global-display-line-numbers-mode t)
   (global-hl-line-mode t)
-  (eval-after-load 'yasnippet
-    '(make-directory
-      (expand-file-name "etc/yasnippet/snippets/" user-emacs-directory) t))
-  (defun my/emacs-startup-in-echo-area ()
-    "Display the package number/loading time in the echo area."
-    (message "GNU Emacs %d.%d loaded %d packages in %.3f seconds."
-             emacs-major-version emacs-minor-version
-             (let ((number-of-packages
-                    (length (directory-files
-                             (concat straight-base-dir "straight/build/") nil "[^.]"))))
-               number-of-packages)
-             (float-time
-              (time-subtract (current-time) before-init-time))))
-  (add-hook 'emacs-startup-hook #'my/emacs-startup-in-echo-area)
   (setq my/toggle-maximize-list '())
   (defun my/toggle-maximize-window ()
     "Maximize current window (like tmux: prefix+z).
 
-FIXME
-Can become 'nested', so always close other windows before you toggle again.
 Doesn't keep your spot: zoom at line 100 then go to 500 and unzoom and
-  it's back at 100.  (I don't know if I mind this?)
+it's back at 100.
 
-https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
+https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/
+
+TODO
+Can become 'nested', so always close other windows before you toggle again.
+  Make it like tmux, where it will unmaximize when you are 'nested' and hit the
+keybind to make another window (and open the new window)."
     (interactive)
     (if (one-window-p)
         (progn
@@ -103,18 +82,29 @@ https://old.reddit.com/r/emacs/comments/gtfxg4/zoommonocle_a_buffer/fsbe7da/"
       (set 'my/toggle-maximize-list 't)
       (window-configuration-to-register '_)
       (delete-other-windows)))
-  (defun my/whitelist-whitespace ()
+  (defun my/allowlist-whitespace ()
     "Turn on `show-trailing-whitespace' for specified modes.
 
-Currently:
-  `org-mode-hook', `text-mode-hook', `prog-mode-hook', `conf-mode-hook'
+Currently: `conf-mode', `org-mode', `prog-mode', `text-mode'
 
 Too much stuff has trailing whitespace when you turn it on globally."
     (setq show-trailing-whitespace t))
-  (dolist (hook '(org-mode-hook text-mode-hook prog-mode-hook conf-mode-hook))
-    (add-hook hook #'my/whitelist-whitespace))
+  (dolist (hook '(conf-mode-hook org-mode-hook prog-mode-hook text-mode-hook))
+    (add-hook hook #'my/allowlist-whitespace))
   ;; https://amitp.blogspot.com/2011/08/emacs-custom-mode-line.html
   ;; https://github.com/cryon/dotemacs/blob/bf233aebb823af57299d93a31d8363f112e1f117/auto/modeline.el
+  (defun my/shorten-directory (dir max-length)
+    "Show up to `MAX-LENGTH' characters of a directory name `DIR'."
+    (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
+          (output ""))
+      (when (and path (equal "" (car path)))
+        (setq path (cdr path)))
+      (while (and path (< (length output) (- max-length 4)))
+        (setq output (concat (car path) "/" output))
+        (setq path (cdr path)))
+      (when path
+        (setq output (concat "Ψ/" output)))
+      output))
   (setq-default
    mode-line-format
    '("%e"
@@ -129,7 +119,7 @@ Too much stuff has trailing whitespace when you turn it on globally."
       help-echo "emacsclient frame")
      (:eval
       (propertize "%3C"
-                  'face (when (>= (current-column) 80)
+                  'face (when (>= (current-column) 79)
                           'mode-line-80col-face)))
      " | %p | "
      mode-name
@@ -154,28 +144,16 @@ Too much stuff has trailing whitespace when you turn it on globally."
      (:eval
       (cond
        (vc-mode
-        (propertize "Ω"
+        (propertize "Ω "
                     'face 'mode-line-misc-face
                     'help-echo "Do Ut Des"))))
-     " "
      (:propertize
-      (:eval (my/shorten-directory default-directory 30)))))
+      (:eval (my/shorten-directory default-directory 30)))
+     mode-line-end-spaces))
   ;; https://emacs.stackexchange.com/questions/10955/customize-vc-mode-appearance-in-mode-line/10957#10957
   (setcdr (assq 'vc-mode mode-line-format)
           '((:eval
-             (replace-regexp-in-string "^.*:\\|.*-" "" vc-mode))))
-  (defun my/shorten-directory (dir max-length)
-    "Show up to `MAX-LENGTH' characters of a directory name `DIR'."
-    (let ((path (reverse (split-string (abbreviate-file-name dir) "/")))
-          (output ""))
-      (when (and path (equal "" (car path)))
-        (setq path (cdr path)))
-      (while (and path (< (length output) (- max-length 4)))
-        (setq output (concat (car path) "/" output))
-        (setq path (cdr path)))
-      (when path
-        (setq output (concat "Ψ/" output)))
-      output))
+             (replace-regexp-in-string "^ Git[-:]" "" vc-mode))))
   (defun my/mode-line-double-flash ()
     "Flash the mode line twice during an exception (like ^g)."
     (let ((flash-sec (/ 1.0 20)))
@@ -183,26 +161,18 @@ Too much stuff has trailing whitespace when you turn it on globally."
       (run-with-timer flash-sec nil #'invert-face 'mode-line)
       (run-with-timer (* 2 flash-sec) nil #'invert-face 'mode-line)
       (run-with-timer (* 3 flash-sec) nil #'invert-face 'mode-line)))
-  (setq visible-bell nil
-        ring-bell-function #'my/mode-line-double-flash))
-
-(use-package org
-  :custom
-  (org-startup-folded t)
-  (org-log-done t)
-  (org-adapt-indentation nil)
-  (org-src-fontify-natively t)
-  (org-src-tab-acts-natively t)  ; Remove in GNU Emacs 28.1
-  (org-edit-src-content-indentation 0))
+  (setq ring-bell-function #'my/mode-line-double-flash)
+  :hook
+  (Info-mode . xah-fly-insert-mode-activate)
+  (Info-selection . xah-fly-insert-mode-activate))
 
 (use-package dired
-  :hook (dired-mode . toggle-truncate-lines)
   :custom
+  (delete-by-moving-to-trash t)    ; Use FreeDesktop.orgs trash ($XDG_DATA_HOME/Trash/)
   (dired-recursive-copies 'always)
-  (delete-by-moving-to-trash t "Use FreeDesktop.orgs trash ($XDG_DATA_HOME/Trash/)")
   (ls-lisp-ignore-case nil)
-  (ls-lisp-verbosity '(links uid gid))
   (ls-lisp-use-insert-directory-program nil)
+  (ls-lisp-verbosity '(links uid gid))
   :config
   (require 'ls-lisp)
   :bind (:map dired-mode-map
@@ -213,43 +183,122 @@ Too much stuff has trailing whitespace when you turn it on globally."
   (eshell-directory-name
    (expand-file-name "var/eshell" user-emacs-directory))
   (eshell-aliases-name
-   (expand-file-name "etc/eshell/aliases" user-emacs-directory)))
+   (expand-file-name "etc/eshell/aliases" user-emacs-directory))
+  (eshell-prompt-function
+   (lambda ()
+     (concat
+      (abbreviate-file-name (eshell/pwd)) "\n"
+      ;; Exit status is always 0 for Lisp built-in commands
+      (if (not (equal '0 eshell-last-command-status))
+          (format "%s" eshell-last-command-status))
+      (if (= (user-uid) 0) "# " "$ "))))
+  ;; This only matches the last line cause that's where my prompt is.  Is that fine?
+  (eshell-prompt-regexp "^[[:digit:]]*[#$] "))
+
+(use-package org
+  :defer 1            ; This is so I can bind:map to `xah-fly-command-map' here
+  :custom
+  (org-agenda-files (list
+                     (expand-file-name "var/org/agenda/" user-emacs-directory)))
+  (org-id-locations-file
+   (expand-file-name "var/org/id-locations.el" user-emacs-directory))
+  (org-adapt-indentation nil)
+  (org-agenda-custom-commands
+   '(("o" "Overview"
+      ((agenda "")
+       (todo "")))))
+  (org-agenda-start-on-weekday 6)
+  (org-agenda-start-with-log-mode t)
+  (org-agenda-time-leading-zero t)
+  ;; This does not work like I expect.  | = mouse point
+  ;; You can't delete from the start: * test|...
+  ;; but you can remove from the end: * test...|
+  ;; Also `xah-delete-current-text-block' works on a folded heading.
+  (org-catch-invisible-edits 'error)
+  (org-edit-src-content-indentation 0)
+  (org-id-link-to-org-use-id 'use-existing)
+  (org-log-done 'time)
+  (org-src-fontify-natively t)
+  (org-startup-folded t)
+  :config
+  (require 'org-id)
+  (defun my/org-agenda ()
+    "Start `org-agenda' in Overview."
+    (interactive)
+    (org-agenda nil "o"))
+  :bind (:map xah-fly-command-map
+              ("SPC n s" . my/org-agenda)))
+
+;; TODO
+;; `balance-windows' will also balance these.
+;; `which-key' opens in a side-window(?) or at least opens in that section
+;; `my/toggle-maximize-window' breaks when one of these is open.
+(use-package window
+  :custom
+  (display-buffer-alist
+   '(("\\*e?shell\\*"
+      (display-buffer-in-side-window)
+      (side . bottom)
+      (slot . -2)
+      (window-height . 0.25)
+      (window-parameters . ((no-delete-other-windows . t)
+                            (mode-line-format . (" " mode-name mode-line-process)))))
+     ("\\*Messages\\*"
+      (display-buffer-in-side-window)
+      (side . bottom)
+      (slot . 1)
+      (window-height . 0.25)
+      (window-parameters . ((no-delete-other-windows . t)
+                            (mode-line-format . (" " mode-name)))))
+     ("\\*Python\\*"
+      (display-buffer-in-side-window)
+      (side . bottom)
+      (slot . -1)
+      (window-height . 0.25)
+      (window-parameters . ((no-delete-other-windows . t)
+                            (mode-line-format . (" " mode-name " | %b")))))))
+  :bind ("<f12>" . window-toggle-side-windows))
 
 (use-package xah-fly-keys
   :straight t
   :demand t
   :custom
   (xah-fly-keys-set-layout "dvorak")
-  :config           ; I still need this in case I just call ~emacs~
+  :config           ; Needed for just calling ~emacs~
   (xah-fly-keys t)
+  (defun my/xterm-cursor ()
+    "Change the cursor shape in xterm to match the GUI (xah-fly-keys)."
+    (unless (display-graphic-p)
+      (if xah-fly-insert-state-q
+          (send-string-to-terminal "\033[6 q") ; Vertical bar
+        (send-string-to-terminal "\033[2 q")))) ; Box
   ;; This seems inelegant but it does seem to work...
+  ;; Ya kinda bad cause I have to define all my `xah-fly-dot-keymap' stuff in
+  ;; here.
   (defun my/clear-set-dot-keybinds ()
     "Clear `xah-fly-dot-keymap' then based on the `major-mode' set keybinds.
 
-Currently:
-  `messages-buffer-mode', `org-mode', `dired-mode', `sh-mode', `python-mode'"
+Currently: `dired-mode', `Info-mode', `org-mode', `python-mode', `sh-mode'"
     (xah-fly--define-keys
-     ;; Don't want keybinds to propagate to other modes, so I have to empty it.
+     ;; Don't want keybinds to propagate to other modes
      (define-prefix-command 'xah-fly-dot-keymap)
-     '())
-    ;; Sets these globally
-    (define-key xah-fly-dot-keymap (kbd "g") #'magit-status)
-    (define-key xah-fly-dot-keymap (kbd "d") #'magit-file-dispatch)
+     '(("g" . magit-status)
+       ("d" . magit-file-dispatch)))
     (cond
-     ((equal major-mode 'messages-buffer-mode)
-      (setq truncate-lines nil))
-     ((equal major-mode 'org-mode)
-      (define-key xah-fly-dot-keymap (kbd "s") #'org-store-link)
-      (define-key xah-fly-dot-keymap (kbd "l") #'org-insert-link)
-      (define-key xah-fly-dot-keymap (kbd "t") #'org-todo)
-      (define-key xah-fly-dot-keymap (kbd "o") #'org-open-at-point)
-      (define-key xah-fly-dot-keymap (kbd "a") #'org-mark-ring-goto)
-      (define-key xah-fly-dot-keymap (kbd "n") #'org-insert-structure-template)
-      (define-key xah-fly-dot-keymap (kbd "d") #'org-export-dispatch))
      ((equal major-mode 'dired-mode)
       (define-key xah-fly-dot-keymap (kbd "s") #'org-store-link))
-     ((equal major-mode 'sh-mode)
-      (define-key xah-fly-dot-keymap (kbd "o") #'my/manual-posix-sh-shellcheck))
+     ((equal major-mode 'Info-mode)
+      (define-key xah-fly-dot-keymap (kbd "s") #'org-store-link))
+     ((equal major-mode 'org-mode)
+      (define-key xah-fly-dot-keymap (kbd "p") #'org-schedule)
+      (define-key xah-fly-dot-keymap (kbd "a") #'org-mark-ring-goto)
+      (define-key xah-fly-dot-keymap (kbd "o") #'org-open-at-point)
+      (define-key xah-fly-dot-keymap (kbd "i") #'org-id-get-create)
+      (define-key xah-fly-dot-keymap (kbd "l") #'org-insert-link)
+      (define-key xah-fly-dot-keymap (kbd "d") #'org-export-dispatch)
+      (define-key xah-fly-dot-keymap (kbd "t") #'org-todo)
+      (define-key xah-fly-dot-keymap (kbd "n") #'org-insert-structure-template)
+      (define-key xah-fly-dot-keymap (kbd "s") #'org-store-link))
      ((equal major-mode 'python-mode)
       ;; Interactive Python
       (define-key xah-fly-dot-keymap (kbd "w") #'elpy-shell-switch-to-shell)
@@ -275,15 +324,20 @@ Currently:
       (define-key xah-fly-dot-keymap (kbd "y") #'elpy-pdb-debug-last-exception)
       ;; Projects
       (define-key xah-fly-dot-keymap (kbd "r") #'elpy-set-project-root)
-      (define-key xah-fly-dot-keymap (kbd "b") #'elpy-rgrep-symbol))))
+      (define-key xah-fly-dot-keymap (kbd "b") #'elpy-rgrep-symbol))
+     ((equal major-mode 'sh-mode)
+      (define-key xah-fly-dot-keymap (kbd "o") #'my/manual-posix-sh-shellcheck))))
   (setq window-state-change-hook #'my/clear-set-dot-keybinds)
+  :hook
+  (xah-fly-command-mode-activate . my/xterm-cursor)
+  (xah-fly-insert-mode-activate . my/xterm-cursor)
   :bind (:map xah-fly-command-map
               ("'" . xah-fill-or-unfill)
               ("b" . isearch-forward-regexp)
-              ("SPC r s" . string-rectangle)
-              ("SPC z" . my/toggle-maximize-window)
               ("SPC v" . display-buffer)
-              ("SPC n q" . elfeed)))
+              ("SPC z" . my/toggle-maximize-window)
+              ("SPC r s" . string-rectangle)
+              ("SPC t q" . save-buffers-kill-emacs)))
 
 (use-package which-key
   :straight t
@@ -291,21 +345,39 @@ Currently:
   :custom
   (which-key-idle-delay 0.4)
   :config
+  (which-key-add-key-based-replacements
+    "SPC ." "mode local"
+    "SPC c" "open/show buffer"
+    "SPC e" "insert"
+    "SPC h" "help"
+    "SPC n" "misc"
+    "SPC r" "section effects"
+    "SPC t" "misc-rare"
+    "SPC w" "elisp functions")
   (which-key-mode))
 
-;; FIXME
-;; Additions or deletions of comments (;) in *.el files, is unreadable.
-;; `dired-diff' (=).
+;; TODO
+;; Additions, deletions, and changes of comments (;) in *.el files, is
+;; unreadable.  Using `dired-diff' (=), select test1.el and compare with
+;; test.el.  To play around with the colors I can use: M-x customize-face FACE.
+;; `magit' doesn't have this problem, see how they did it.
 ;; Simple example:
-;;   test.el: (message "cat") ; Test
-;;   test1.el: (message "cat")
+;; test.el:
+;; (message "cat") ; test
+;; (message "cat") ; cat
+;; (message "cat") ; mk
+;; (message "cat")
+;; test1.el:
+;; (message "cat") ; test
+;; (message "cat") ; dog
+;; (message "dog") ;
 (use-package srcery-theme
   :straight t
   :custom
   (srcery-org-height nil)
   :config
   (defun my/customize-srcery-theme (_theme &rest _args)
-    "Tweaks to make `srcery-theme' more appealing.
+    "Tweaks to `srcery-theme'.
 
 https://old.reddit.com/r/emacs/comments/geisxd/what_is_a_best_way_to_modify_theme_downloaded/fpnns1q/"
     (when (member 'srcery custom-enabled-themes)
@@ -313,31 +385,27 @@ https://old.reddit.com/r/emacs/comments/geisxd/what_is_a_best_way_to_modify_them
       (make-face 'mode-line-misc-face)
       ;; colors from `srcery-theme.el'
       (let* ((srcery-class '((class color) (min-colors 257)))
-             (srcery-256-class '((class color) (min-colors 89)))
-             (srcery-256-red            "red"))
+             (srcery-256-class '((class color) (min-colors 89))))
         (custom-theme-set-faces
          'srcery
-         `(fringe
-           ((,srcery-class (:background "#000000"))))
+         `(dired-perm-write
+           ((,srcery-class (:foreground "#FF8700" :weight bold :underline t))
+            (,srcery-256-class (:foreground "color-208" :weight bold :underline t))))
          `(flyspell-incorrect
-           ((,srcery-class (:foreground ,srcery-red :underline (:style wave)))
-            (,srcery-256-class (:foreground ,srcery-256-red :underline t))))
-         `(line-number
-           ((,srcery-class (:foreground "#918175" :background "#0f0e0d"))
-            (,srcery-256-class (:foreground "#918175" :background "#0f0e0d"))))
+           ((,srcery-class (:foreground "#EF2F27" :underline (:style wave)))
+            (,srcery-256-class (:foreground "red" :underline t))))
          `(mode-line-inactive
-           ((,srcery-class (:foreground "#918175" :background "#303030"))
-            (,srcery-256-class (:foreground "#918175" :background "#303030"))))
+           ((,srcery-class (:foreground "#7E7E7E" :background "#303030"))
+            (,srcery-256-class (:foreground "color-244" :background "color-236"))))
          `(mode-line-80col-face
-           ((,srcery-class (:foreground "#ff7f50" :background "#0f0e0d"))
-            (,srcery-256-class (:foreground "#ff7f50" :background "#0f0e0d"))))
+           ((,srcery-class (:foreground "#FF7F50" :background "#0F0E0D"))
+            (,srcery-256-class (:foreground "#FF7F50" :background "#0F0E0D"))))
          `(mode-line-misc-face
-           ((,srcery-class (:foreground "#ff7f50"))
-            (,srcery-256-class (:foreground "#ff7f50")))))))))
+           ((,srcery-class (:foreground "#FF7F50"))
+            (,srcery-256-class (:foreground "#FF7F50")))))))))
 ;; https://emacs.stackexchange.com/questions/48365/custom-theme-set-faces-does-not-work-in-emacs-27/52804#52804
 (setq custom--inhibit-theme-enable nil)
 (advice-add 'load-theme :after #'my/customize-srcery-theme)
-;; Can't be put under the `use-package' section?
 (load-theme 'srcery t)
 
 (use-package elfeed
@@ -347,44 +415,22 @@ https://old.reddit.com/r/emacs/comments/geisxd/what_is_a_best_way_to_modify_them
    (expand-file-name "var/elfeed" user-emacs-directory))
   (elfeed-enclosure-default-dir
    (expand-file-name "var/elfeed/enclosures" user-emacs-directory))
+  (elfeed-search-filter "@7-days-ago +unread")
   :config
-  (add-hook 'elfeed-new-entry-hook
-            (elfeed-make-tagger :feed-url "reddit\\.com"
-                                :add '(reddit)))
   (add-hook 'elfeed-new-entry-hook
             (elfeed-make-tagger :feed-url "youtube\\.com"
                                 :add '(youtube video)))
-  (defun my/elfeed-show-mode-truncate-lines ()
-    "Turn off `truncate-lines' in `elfeed-show-mode'."
-    (setq truncate-lines nil))
-  (add-hook 'elfeed-show-mode-hook #'my/elfeed-show-mode-truncate-lines)
-  ;; https://karthinks.com/software/lazy-elfeed/
-  ;; FIXME
-  ;; If I change to the show buffer and hit 'p' it will keep switching the
-  ;; position of the search window (starts at the top), hit 'p' moves the search
-  ;; window to the bottom.
-  ;; If I hit 'n' instead the same as above will happen but it will also start
-  ;; going down the list of feeds.
-  (defun my/elfeed-display-buffer (buf &optional act)
-    (pop-to-buffer buf)
-    (set-window-text-height (get-buffer-window) (round (* 0.8 (frame-height)))))
-  (setq elfeed-show-entry-switch #'my/elfeed-display-buffer)
-  (defun my/elfeed-search-show-entry-pre (&optional lines)
-    "Returns a function to scroll forward or back in the `elfeed' search results,
-displaying entries without switching to them."
-    (lambda (times)
-      (interactive "p")
-      (forward-line (* times (or lines 0)))
-      (recenter)
-      (call-interactively #'elfeed-search-show-entry)
-      (select-window (previous-window))
-      (unless elfeed-search-remain-on-entry (forward-line -1))))
-  (define-key elfeed-search-mode-map (kbd "n") (my/elfeed-search-show-entry-pre +1))
-  (define-key elfeed-search-mode-map (kbd "p") (my/elfeed-search-show-entry-pre -1))
-  :bind (:map elfeed-search-mode-map
-              ("j" . elfeed-search-yank)
+  (add-hook 'elfeed-new-entry-hook
+            (elfeed-make-tagger :feed-url "reddit\\.com"
+                                :add '(reddit)))
+  :hook
+  (elfeed-search-mode . xah-fly-insert-mode-activate)
+  :bind (:map xah-fly-n-keymap
+              ("q" . elfeed)
+              :map elfeed-search-mode-map
               ("SPC" . next-line)
               ("DEL" . previous-line)
+              ("j" . elfeed-search-yank)
               :map elfeed-show-mode-map
               ("j" . elfeed-show-yank)))
 
@@ -395,19 +441,27 @@ displaying entries without switching to them."
 
 (use-package prescient
   :straight t
-  :config
+  :custom
   (prescient-persist-mode t))
 
 (use-package selectrum-prescient
   :straight t
-  :demand t
-  :config
+  :custom
   (selectrum-prescient-mode t))
 
-(defun my/prog-display-header ()
-  "Display the heading with the path to the file."
-  (setq header-line-format '("%f")))
-(add-hook 'prog-mode-hook #'my/prog-display-header)
+(use-package prog-mode
+  :custom
+  (eldoc-idle-delay 0)
+  (show-paren-delay 0)
+  :config
+  (show-paren-mode t)
+  (defun my/prog-truncate-display-header ()
+    "Truncate lines & display the heading with the path to the file."
+    (setq truncate-lines t)
+    (setq header-line-format '("%f")))
+  :hook
+  (prog-mode . flyspell-prog-mode)
+  (prog-mode . my/prog-truncate-display-header))
 
 (use-package magit
   :straight t
@@ -421,22 +475,35 @@ displaying entries without switching to them."
 
 (use-package flycheck
   :straight t
-  :hook ((prog-mode elpy-mode) . flycheck-mode))
+  :hook
+  (prog-mode . flycheck-mode))
 
 (use-package elisp-mode
-  :hook ((emacs-lisp-mode . my/no-tabs-in-lisp)
-         (emacs-lisp-mode . my/after-save-check-parens))
   :config
-  (defun my/no-tabs-in-lisp ()
-    "With how Lisp works I don't want tabs."
-    (setq indent-tabs-mode nil))
-  (defun my/after-save-check-parens ()
-    "Check for unbalanced parentheses after a save."
-    (add-hook 'after-save-hook #'check-parens nil t)))
+  (setq find-function-C-source-directory "~/src/emacs/src")
+  (defun my/no-tabs-save-check-parens ()
+    "No tabs in Elisp and check for unbalanced parentheses after a save."
+    (setq indent-tabs-mode nil)
+    (add-hook 'after-save-hook #'check-parens nil t))
+  :hook
+  (emacs-lisp-mode . my/no-tabs-save-check-parens))
 
+;; TODO
+;; After '\' it inserts spaces:
+;; echo cat \
+;;      dog
+;; I want 0 spaces:
+;; echo cat \
+;; dog
+;; Looks like the '\' is escaping
+;; https://superuser.com/questions/1037043/emacs-suppress-indent-after-in-shell-script-mode
+;; https://emacs.stackexchange.com/questions/28343/sh-script-alignment-issues?noredirect=1
 (use-package sh-script
   :custom
   (sh-basic-offset 8)
+  ;; No indent for case patterns, one indent for lists.
+  (sh-indent-for-case-label 0)
+  (sh-indent-for-case-alt '+)
   :config
   (defun my/manual-posix-sh-shellcheck ()
     "I don't think `flycheck' can just do POSIX sh?  So this takes the current file
@@ -452,27 +519,34 @@ and runs ~shellcheck -axs sh `buffer-file-name'~."
 
 (use-package elpy
   :straight t
-  :hook (python-mode . elpy-enable)
   :custom
-  (elpy-get-info-from-shell t)
   (elpy-rpc-virtualenv-path
    (expand-file-name "var/elpy" user-emacs-directory))
+  (elpy-rpc-python-command "python3")
+  (elpy-formatter "black")
+  (elpy-get-info-from-shell t)
+  (yas-snippet-dirs
+   (expand-file-name "etc/yasnippet/" user-emacs-directory))
   :config
+  (defalias 'workon 'pyvenv-workon)
   (delq 'elpy-module-flymake elpy-modules)
   (delq 'elpy-module-highlight-indentation elpy-modules)
   (setenv "WORKON_HOME" (expand-file-name "~/src/venv/"))
-  (defalias 'workon 'pyvenv-workon))
+  (eval-after-load 'yasnippet
+    '(make-directory
+      (expand-file-name "etc/yasnippet/snippets/" user-emacs-directory) t))
+  :hook
+  (python-mode . elpy-enable))
 
 (let ((personal-stuff (expand-file-name "personal.el" user-emacs-directory)))
-  (when (file-exists-p personal-stuff)
+  (when (file-readable-p personal-stuff)
     (load-file personal-stuff)))
 
 (defun my/server-fix-up ()
   "Make sure `xah-fly-keys' is starting in command-mode.
 
-https://github.com/xahlee/xah-fly-keys/issues/103
-https://github.com/daviwil/emacs-from-scratch/blob/master/show-notes/Emacs-Tips-08.org#configuring-the-ui-for-new-frames"
+https://github.com/xahlee/xah-fly-keys/issues/103"
   (xah-fly-keys t))
 
-(if (daemonp)
-    (add-hook 'server-after-make-frame-hook #'my/server-fix-up))
+(when (daemonp)
+  (add-hook 'server-after-make-frame-hook #'my/server-fix-up))

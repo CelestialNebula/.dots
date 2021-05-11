@@ -10,8 +10,9 @@ command emacs	emacs
 autogroup 1 'xterm,XTerm'
 autogroup 2 'emacs,Emacs'
 
-ignore 'taskbar'
-ignore 'mpv'
+ignore xconsole
+ignore taskbar
+ignore mpv
 
 bind-mouse 4-1	window-move
 bind-mouse 4-3	window-resize
@@ -40,3 +41,4 @@ bind-key 4C-2	'emacsclient -ca ""'
 bind-key 4C-3	'xterm -class taskbar -e "$HOME/.scripts/taskbar"'
 bind-key 4C-k	xkill
 bind-key 4C-l	xlock
+bind-key 4CS-4	emacs

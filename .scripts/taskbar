@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 # strftime = format date and time
 
-set -eu
-
 Date=$(date "+(365/%j) %F | %B %d, %A")
 Clock=$(date "+%R")
 Uptime=$(uptime | sed -Ee 's/^.*up /up/' -e 's/ [0-9]+ user.* l/ l/')
