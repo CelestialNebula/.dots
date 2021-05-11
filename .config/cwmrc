@@ -12,8 +12,8 @@ command qq	'firefox -P qq --no-remote'
 autogroup 1 'xterm,XTerm'
 autogroup 2 'emacs,Emacs'
 
-ignore 'taskbar'
-ignore 'mpv'
+ignore taskbar
+ignore mpv
 
 bind-mouse 4-1	window-move
 bind-mouse 4-3	window-resize
@@ -44,3 +44,4 @@ bind-key 4C-4	'firefox -P zz --no-remote'
 bind-key 4C-5	'firefox -P qq --no-remote'
 bind-key 4C-k	xkill
 bind-key 4C-l	slock
+bind-key 4CS-4	emacs

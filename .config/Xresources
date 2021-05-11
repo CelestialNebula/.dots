@@ -1,28 +1,22 @@
-! Enable it by running:
 ! $ xrdb ~/.config/Xresources
 
-XTerm*vt100.geometry		: 90x24
-! Set TERM env variable to use 256 colors
+*omitTranslation		: popup-menu
 XTerm*termName			: xterm-256color
-! Turn off text cursor blinking, if I need to use: emacs -nw, I need this
+! If I use: ~emacs -nw~, I *need* this
 XTerm*cursorBlink		: never
-! Clicking a line selects only from the current word forward
 XTerm*cutToBeginningOfLine	: false
-! Font
 XTerm*faceName			: DejaVu Sans Mono
 XTerm*faceSize			: 11
-! Tells xterm to use CLIPBOARD for SELECT tokens in the selection mechanism
 XTerm*selectToClipboard		: true
-! Allow pasting with ^Shift K
-XTerm*vt100.translations	: #override \n\
+XTerm.vt100.geometry		: 90x24
+! Paste with ^Shift K
+XTerm.vt100.translations	: #override \n\
 					Ctrl Shift <Key>K: insert-selection(CLIPBOARD)
 
-taskbar.vt100.geometry		: 160x1+0
 taskbar*faceName		: DejaVu Sans Mono
 taskbar*faceSize		: 10
-taskbar*omitTranslation		: popup-menu
+taskbar.vt100.geometry		: 160x1+0
 
-! Color
 ! http://futurile.net/2016/06/15/xterm-256color-themes-molokai-terminal-theme/
 ! https://github.com/srcery-colors/srcery-terminal/blob/master/xresources/srcery.xresources
 ! 2020-01-16
