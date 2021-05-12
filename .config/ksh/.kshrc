@@ -69,7 +69,7 @@ alias shutdownc='doas shutdown -p now'
 alias pgadd='doas pkg_add -v'
 alias pgdelete='doas pkg_delete -v'
 alias pginfo='pkg_info'
-alias ls='ls -AFhl'
+alias l='ls -AFhl'
 alias ca='cat -v'
 alias top='top -CS -o cpu -s 1.5'
 # https://github.com/tmux/tmux/commit/15d7e564ddab575dd3ac803989cc99ac13b57198
